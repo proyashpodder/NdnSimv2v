@@ -258,13 +258,19 @@ int main (int argc, char *argv[])
 
  //Will add cost231Propagationloss model loss here for and packet loss
 
-  // Consumer
-  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
-  // Consumer will request /prefix/0, /prefix/1, ...
-  //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
+  // // Consumer
+  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
+  // // Consumer will request /prefix/0, /prefix/1, ...
+  // //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
+  // consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
+  // consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
+  // consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2));                        // first node
+
+  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
   consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
-  consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
-  consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2));                        // first node
+  consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
+  consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
+  consumerHelper.Install(ueNodes.Get(0));
 
   // Producer
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");
@@ -274,8 +280,8 @@ int main (int argc, char *argv[])
   //producerHelper.Install(ueNodes.Get(3));
 
   //ns3::ndn::L3RateTracer::InstallAll("trace.txt", Seconds(1));
-  Simulator::Stop(Seconds(3.5)); // expect 10 distinct requests
-  // Simulator::Stop(Seconds(12.5)); // expect 10 distinct requests
+  // Simulator::Stop(Seconds(2.9)); // expect 1 distinct request
+  Simulator::Stop(Seconds(12.99)); // expect 10 distinct requests
   int no = (int) nodeNumber;
   std::ofstream of("results/" + std::to_string(no) +
                    "-tmin=" + std::to_string(tMin) +
