@@ -25,12 +25,17 @@ int main (int argc, char *argv[])
   bool enableNsLogs = false;
   bool useIPv6 = false;
   //double distance=atoi(argv[1]);
-  double nodeNumber = atoi(argv[1]);
+  int nodeNumber = 20;
+  double tMin = 0.02;
+  double tMax = 0.1;
 
   CommandLine cmd;
-  cmd.AddValue ("simTime", "Total duration of the simulation", simTime);
-  cmd.AddValue ("enableNsLogs", "Enable ns-3 logging (debug builds)", enableNsLogs);
-  cmd.AddValue("nodeNumber", "The total nodes will be.",nodeNumber);
+  cmd.AddValue("simTime", "Total duration of the simulation", simTime);
+  cmd.AddValue("enableNsLogs", "Enable ns-3 logging (debug builds)", enableNsLogs);
+  cmd.AddValue("nodeNumber", "The total nodes will be", nodeNumber);
+
+  cmd.AddValue("tmin", "", tMin);
+  cmd.AddValue("tmax", "", tMax);
 
   cmd.Parse (argc, argv);
 
@@ -127,7 +132,7 @@ int main (int argc, char *argv[])
   mobility.Install(ueNodes.Get (1));
   mobility.Install(ueNodes.Get (2));
   mobility.Install(ueNodes.Get (3));
-  double inc = 600/nodeNumber;
+  double inc = 600.0/nodeNumber;
   double xposition = inc;
   for( int i = 1; i< nodeNumber; i++ ){
     //initialAlloc->Add(Vector(xposition,0.0,0.0));
@@ -248,7 +253,8 @@ int main (int argc, char *argv[])
   helper.InstallAll();
 
   //* Choosing forwarding strategy *//
-  ns3::ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/directed-geocast");
+  ns3::ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +
+                                             std::to_string(tMin) + "/" + std::to_string(tMax));
 
  //Will add cost231Propagationloss model loss here for and packet loss
 
@@ -268,22 +274,26 @@ int main (int argc, char *argv[])
   //producerHelper.Install(ueNodes.Get(3));
 
   //ns3::ndn::L3RateTracer::InstallAll("trace.txt", Seconds(1));
-  Simulator::Stop (Seconds(4));
+  Simulator::Stop(Seconds(3.5)); // expect 10 distinct requests
+  // Simulator::Stop(Seconds(12.5)); // expect 10 distinct requests
   int no = (int) nodeNumber;
-  std::ofstream of(std::to_string(no)+"cancelasunhelpful.csv");
-  of << "Node,Time,Name,Action,x coordinate, y coordinate" << std::endl;
+  std::ofstream of("results/" + std::to_string(no) +
+                   "-tmin=" + std::to_string(tMin) +
+                   "-tmax=" + std::to_string(tMax) +
+                   "-cancelasunhelpful.csv");
+  of << "Node,Time,Name,Action,X,Y" << std::endl;
   nfd::fw::DirectedGeocastStrategy::onAction.connect([&of] (const ::ndn::Name& name, int type, double x, double y) {
       auto context = Simulator::GetContext();
       auto time = Simulator::Now().ToDouble(Time::S);
       std::string action;
-      if(type == 0)
-      	action = "sent";
-      else if( type == 1)
-        action = "received";
+      if (type == 0)
+        action = "Broadcast";
+      else if (type == 1)
+        action = "Received";
       else if (type == 2)
-        action = "duplicate received";
+        action = "Duplicate";
       else
-        action = "canceled";
+        action = "Suppressed";
       of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y <<std::endl;
     });
 

@@ -218,12 +218,21 @@ int main (int argc, char *argv[])
   //ns3::ndn::L3RateTracer::InstallAll("trace.txt", Seconds(1));
   Simulator::Stop (Seconds(4));
 
-  std::ofstream of("file.csv");
-  of << "Node,Time,Name,Action" << std::endl;
-  nfd::fw::DirectedGeocastStrategy::onAction.connect([&of] (const ::ndn::Name& name, int type) {
+  std::ofstream of("results/wrongdirection.csv");
+  of << "Node,Time,Name,Action,X,Y" << std::endl;
+  nfd::fw::DirectedGeocastStrategy::onAction.connect([&of] (const ::ndn::Name& name, int type, double x, double y) {
       auto context = Simulator::GetContext();
       auto time = Simulator::Now().ToDouble(Time::S);
-      of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << type << std::endl;
+      std::string action;
+      if (type == 0)
+        action = "Broadcast";
+      else if (type == 1)
+        action = "Received";
+      else if (type == 2)
+        action = "Duplicate";
+      else
+        action = "Suppressed";
+      of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y <<std::endl;
     });
 
   Simulator::Run ();
