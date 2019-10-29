@@ -29,13 +29,13 @@ adjusted = subset(data, Action != "Duplicate")
 ## p.Wages.all.A_MEAN <- Wages.all %>%
 ##                   group_by(`Career Cluster`, Year)%>%
 ##                   summarize(ANNUAL.MEAN.WAGE = mean(A_MEAN))
-counts = adjusted %>% group_by(Action, Name, TotalNodes) %>% tally()
+counts = adjusted %>% group_by(Action, Name, Tmin) %>% tally()
 
-countsWithErrors = counts %>% group_by(Action, TotalNodes) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
+countsWithErrors = counts %>% group_by(Action, Tmin) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
 
     ## summarize(Time=count(Time))
 
-g2 <- ggplot(countsWithErrors, aes(x=TotalNodes)) +
+g2 <- ggplot(countsWithErrors, aes(x=Tmin)) +
     geom_bar(stat="identity", aes(y=Mean, colour=Action, fill=Action), position="dodge") +
     geom_errorbar(aes(ymin=Min, ymax=Max, group=Action), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +
     theme_custom()
