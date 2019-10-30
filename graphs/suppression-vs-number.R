@@ -19,7 +19,7 @@ for (number in levels) {
     data = rbind(t, data)
 }
 
-s = subset(data, TotalNodes==200 & Action!="Received" & Action!="Duplicate")
+s = subset(data, TotalNodes==200 & Action!="Suppressed" & Action!="Duplicate")
 
 g <- ggplot(s, aes(x=X, y=Y)) +
     theme_custom() +
@@ -27,7 +27,7 @@ g <- ggplot(s, aes(x=X, y=Y)) +
     scale_size_manual(values=c(4,1)) +
     facet_grid(Name ~ .)
 
-adjusted = subset(data, Action != "Duplicate")
+adjusted = subset(data, Action != "Duplicate" & Action != "Suppressed")
 ## levels(adjusted$Action) = c("Broadcast", "Received", "Received", "Suppressed")
 
 ## p.Wages.all.A_MEAN <- Wages.all %>%
