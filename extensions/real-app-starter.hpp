@@ -54,7 +54,7 @@ protected:
     // Create an instance of the app, and passing the dummy version of KeyChain (no real signing)
     m_instance.reset(new app::RealApp(ndn::StackHelper::getKeyChain()));
     m_instance->setPrefix(m_prefix);
-    m_instance->run(); // can be omitted
+    m_instance->run();
   }
 
   virtual void

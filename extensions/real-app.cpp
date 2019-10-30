@@ -29,7 +29,6 @@ void
 RealApp::run(size_t count)
 {
   for (size_t i = 0; i < count; ++i) {
-
     m_scheduler.schedule(ndn::time::seconds(i) +
                          ndn::time::duration_cast<ndn::time::nanoseconds>(ndn::time::duration<double>(m_randVar->GetValue())),
                          [this, i] {
