@@ -76,8 +76,7 @@ class Processor:
                 self.graph ()
 
     def graph (self):
-        pass
-        # subprocess.call ("./graphs/%s.R" % self.name, shell=True)
+        subprocess.call ("./graphs/%s.R" % self.name, shell=True)
 
 class SuppressionVsNumber(Processor):
     def __init__ (self):
@@ -103,24 +102,39 @@ class SuppressionVsTimers(Processor):
         cmdline = ["./build/cancelasunhelpful"]
 
         nodeNumber = 100
-        for tmin in [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10]:
-            path = cmdline + ["--nodeNumber=%d" % nodeNumber] + ["--tmin=%f" % tmin] + ["--tmax=0.2"]
+        for tmax in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]:
+            path = cmdline + ["--nodeNumber=%d" % nodeNumber] + ["--tmin=0.05"] + ["--tmax=%f" % tmax]
             job = SimulationJob(path)
             pool.put(job)
 
     def postprocess (self):
         # any postprocessing, if any
         pass
-    
+
+class SourceInMiddle(Processor):
+    def __init__ (self):
+        self.name = "sourceinmiddle"
+
+    def simulate (self):
+        cmdline = ["./build/sourceinmiddle", "--nodeNumber=100", "--tmin=0.05", "--tmax=0.3"]
+        job = SimulationJob(cmdline)
+        pool.put(job)
+
+    def postprocess (self):
+        # any postprocessing, if any
+        pass
+
 try:
     # Simulation, processing, and graph building
     fig = SuppressionVsNumber()
-    fig.run ()
+    fig.run()
 
     fig = SuppressionVsTimers()
-    fig.run ()
+    fig.run()
 
-    
+    fig = SourceInMiddle()
+    fig.run()
+
 finally:
-    pool.join ()
-    pool.shutdown ()
+    pool.join()
+    pool.shutdown()

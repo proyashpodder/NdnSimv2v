@@ -117,34 +117,7 @@ int main (int argc, char *argv[])
 
   MobilityHelper mobility;
   Ptr<ListPositionAllocator> initialAlloc = CreateObject<ListPositionAllocator> ();
-  //this node will generate the interest
   initialAlloc->Add(Vector(200.0,0.0,0.0));
-  //these nodes will receive the interest in 1st hop
-  /*initialAlloc->Add(Vector(200.0,0.0,0.0));
-  //these nodes will receive the interest in first hop and drop it as they are in opposite direction from the destination
-  initialAlloc->Add(Vector(500.0,0.0,0.0));
-  //this is the producer node
-  initialAlloc->Add(Vector(700.0,0.0,0.0));
-
-  mobility.SetPositionAllocator(initialAlloc);
-  mobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
-  mobility.Install(ueNodes.Get (0));
-  mobility.Install(ueNodes.Get (1));
-  mobility.Install(ueNodes.Get (2));
-  mobility.Install(ueNodes.Get (3));
-  double inc = 600.0/nodeNumber;
-  double xposition = inc;
-  for( int i = 1; i< nodeNumber; i++ ){
-    //initialAlloc->Add(Vector(xposition,0.0,0.0));
-    //xposition = xposition + inc;
-    if(i%2 == 0){
-      initialAlloc->Add(Vector(xposition,50.0,0.0));
-    }
-    else{
-     initialAlloc->Add(Vector(xposition,-50.0,0.0));
-    }
-    xposition = xposition + inc;
-  }*/
 
   int full = 1;
   int check[400];
@@ -167,14 +140,12 @@ int main (int argc, char *argv[])
       yCoordinate = (no/50)*4;
       initialAlloc->Add(Vector(xCoordinate,yCoordinate,0.0));
     }
-
   }
 
   mobility.SetPositionAllocator(initialAlloc);
   mobility.SetMobilityModel ("ns3::ConstantVelocityMobilityModel");
-  //ueNodes.Get (0)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (10, 0, 0));
   for(int i= 0;i<nodeNumber; i++){
-    mobility.Install(ueNodes.Get (i));
+    mobility.Install(ueNodes.Get(i));
     if(i%2 == 0 ){
       ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (10, 0, 0));
     }
@@ -182,9 +153,6 @@ int main (int argc, char *argv[])
       ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (5, 0, 0));
     }
   }
-  //mobility.Install(ueNodes.Get (0));
-  
-
 
   //Install LTE UE devices to the nodes
   NetDeviceContainer ueDevs = lteHelper->InstallUeDevice (ueNodes);
@@ -256,21 +224,9 @@ int main (int argc, char *argv[])
   ns3::ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +
                                              std::to_string(tMin) + "/" + std::to_string(tMax));
 
- //Will add cost231Propagationloss model loss here for and packet loss
-
-  // // Consumer
-  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
-  // // Consumer will request /prefix/0, /prefix/1, ...
-  // //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
-  // consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
-  // consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
-  // consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2));                        // first node
-
-  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
-  consumerHelper.SetPrefix("/v2safety/8thStreet/200,0,0/700,0,0/100");
-  consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
-  consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
-  consumerHelper.Install(ueNodes.Get(0));
+  ::ns3::ndn::AppHelper consumerHelper("RealAppStarter");
+  consumerHelper.SetPrefix("/v2safety/8thStreet/@COORD@/700,0,0/100");
+  consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2.0));
 
   // Producer
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");
@@ -283,10 +239,10 @@ int main (int argc, char *argv[])
   // Simulator::Stop(Seconds(2.9)); // expect 1 distinct request
   Simulator::Stop(Seconds(12.99)); // expect 10 distinct requests
   int no = (int) nodeNumber;
-  std::ofstream of("results/" + std::to_string(no) +
+  std::ofstream of("results/srcinmiddle-" + std::to_string(no) +
                    "-tmin=" + std::to_string(tMin) +
                    "-tmax=" + std::to_string(tMax) +
-                   "-sourceinthemiddle.csv");
+                   ".csv");
   of << "Node,Time,Name,Action,X,Y" << std::endl;
   nfd::fw::DirectedGeocastStrategy::onAction.connect([&of] (const ::ndn::Name& name, int type, double x, double y) {
       auto context = Simulator::GetContext();
@@ -300,7 +256,8 @@ int main (int argc, char *argv[])
         action = "Duplicate";
       else
         action = "Suppressed";
-      of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y <<std::endl;
+
+      of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y << std::endl;
     });
 
   Simulator::Run ();

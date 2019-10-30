@@ -24,6 +24,7 @@
 
 #include "ns3/ndnSIM/helper/ndn-stack-helper.hpp"
 #include "ns3/application.h"
+#include "ns3/string.h"
 
 namespace ns3 {
 
@@ -36,7 +37,11 @@ public:
   {
     static TypeId tid = TypeId("RealAppStarter")
       .SetParent<Application>()
-      .AddConstructor<RealAppStarter>();
+      .AddConstructor<RealAppStarter>()
+      .AddAttribute("Prefix", "Name of the Interest", StringValue("/default"),
+                    ndn::MakeNameAccessor(&RealAppStarter::setPrefix, &RealAppStarter::getPrefix),
+                    ndn::MakeNameChecker())
+      ;
 
     return tid;
   }
@@ -48,7 +53,8 @@ protected:
   {
     // Create an instance of the app, and passing the dummy version of KeyChain (no real signing)
     m_instance.reset(new app::RealApp(ndn::StackHelper::getKeyChain()));
-    m_instance->run(); // can be omitted
+    m_instance->setPrefix(m_prefix);
+    m_instance->run();
   }
 
   virtual void
@@ -58,8 +64,24 @@ protected:
     m_instance.reset();
   }
 
+  void
+  setPrefix(const ndn::Name& prefix)
+  {
+    m_prefix = prefix;
+    if (m_instance) {
+      m_instance->setPrefix(m_prefix);
+    }
+  }
+
+  ndn::Name
+  getPrefix() const
+  {
+    return m_prefix;
+  }
+
 private:
   std::unique_ptr<app::RealApp> m_instance;
+  ndn::Name m_prefix = "/default";
 };
 
 } // namespace ns3

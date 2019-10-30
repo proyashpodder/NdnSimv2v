@@ -148,6 +148,8 @@ class GccBasicFlags(CompilerFlags):
                               '-Wno-error=deprecated-declarations', # Bug #3795
                               '-Wno-error=maybe-uninitialized', # Bug #1615
                               '-Wno-unused-parameter',
+                              '-Wno-c++98-compat-extra-semi',
+                              '-Wno-extra-semi',
                               ]
         flags['LINKFLAGS'] += ['-Wl,-O1']
         return flags
@@ -161,6 +163,8 @@ class GccBasicFlags(CompilerFlags):
                               '-Wextra',
                               '-Wnon-virtual-dtor',
                               '-Wno-unused-parameter',
+                              '-Wno-c++98-compat-extra-semi',
+                              '-Wno-extra-semi',
                               ]
         flags['LINKFLAGS'] += ['-Wl,-O1']
         return flags

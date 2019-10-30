@@ -256,21 +256,15 @@ int main (int argc, char *argv[])
   ns3::ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +
                                              std::to_string(tMin) + "/" + std::to_string(tMax));
 
- //Will add cost231Propagationloss model loss here for and packet loss
-
-  // // Consumer
-  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
-  // // Consumer will request /prefix/0, /prefix/1, ...
-  // //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
+  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
   // consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
-  // consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
-  // consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2));                        // first node
+  // consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
+  // consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
+  // consumerHelper.Install(ueNodes.Get(0));
 
-  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
-  consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
-  consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
-  consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
-  consumerHelper.Install(ueNodes.Get(0));
+  ::ns3::ndn::AppHelper consumerHelper("RealAppStarter");
+  consumerHelper.SetPrefix("/v2safety/8thStreet/@COORD@/700,0,0/100");
+  consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2.0));
 
   // Producer
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");

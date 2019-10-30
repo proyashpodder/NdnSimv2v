@@ -201,12 +201,13 @@ int main (int argc, char *argv[])
  //Will add cost231Propagationloss model loss here for and packet loss
 
   // Consumer
-  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
-  // Consumer will request /prefix/0, /prefix/1, ...
-  //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
-  consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
-  consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
-  consumerHelper.Install(ueNodes.Get(0));                        // first node
+  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
+  // consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
+  // consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
+  // consumerHelper.Install(ueNodes.Get(0));                        // first node
+  ::ns3::ndn::AppHelper consumerHelper("RealAppStarter");
+  consumerHelper.SetPrefix("/v2safety/8thStreet/@COORD@/700,0,0/100");
+  consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2.0));
 
   // Producer
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");
@@ -218,7 +219,7 @@ int main (int argc, char *argv[])
   //ns3::ndn::L3RateTracer::InstallAll("trace.txt", Seconds(1));
   Simulator::Stop (Seconds(4));
 
-  std::ofstream of("results/wrongdirection.csv");
+  std::ofstream of("results/wrongdirection2.csv");
   of << "Node,Time,Name,Action,X,Y" << std::endl;
   nfd::fw::DirectedGeocastStrategy::onAction.connect([&of] (const ::ndn::Name& name, int type, double x, double y) {
       auto context = Simulator::GetContext();
@@ -232,6 +233,7 @@ int main (int argc, char *argv[])
         action = "Duplicate";
       else
         action = "Suppressed";
+
       of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y <<std::endl;
     });
 
