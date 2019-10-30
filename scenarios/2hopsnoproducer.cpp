@@ -146,28 +146,50 @@ int main (int argc, char *argv[])
     xposition = xposition + inc;
   }*/
 
-  int full = 1;
-  int check[400];
-  for(int i=0;i<400;i++){
-    check[i] = 0;
-  }
+  // int full = 1;
+  // int check[400];
+  // for(int i=0; i<400; i++){
+  //   check[i] = 0;
+  // }
 
-  while(full < nodeNumber){
-    Ptr<UniformRandomVariable> uvr = CreateObject<UniformRandomVariable> ();
-    double uv = uvr->GetValue();
-    double xCoordinate,yCoordinate;
-    std::cout << uv<< std::endl;
-    uv =ceil(uv*100);
-    uv = uv/100*320;
-    int no = (int) uv;
-    if(check[no] == 0){
-      full++;
-      std::cout<< no << std::endl;
-      xCoordinate = (no%80)*10;
-      yCoordinate = (no/80)*4;
-      initialAlloc->Add(Vector(xCoordinate,yCoordinate,0.0));
+  Ptr<UniformRandomVariable> x = CreateObject<UniformRandomVariable>();
+  Ptr<UniformRandomVariable> y = CreateObject<UniformRandomVariable>();
+
+  x->SetAttribute ("Min", ns3::DoubleValue(0));
+  x->SetAttribute ("Max", ns3::DoubleValue(300)); //scaled to 10
+
+  y->SetAttribute ("Min", ns3::DoubleValue(0));
+  y->SetAttribute ("Max", ns3::DoubleValue(4));
+
+  std::vector<std::vector<bool>> check(300, std::vector<bool>(5, false));
+
+  int full = 1;
+  while (full < nodeNumber) {
+    double xCoordinate = x->GetValue();
+    double yCoordinate = y->GetValue();
+
+    if (check[static_cast<size_t>(xCoordinate)][static_cast<size_t>(yCoordinate)]) {
+      continue;
     }
 
+    check[static_cast<size_t>(xCoordinate)][static_cast<size_t>(yCoordinate)] = true;
+
+    // double uv = uvr->GetValue();
+    // double xCoordinate,yCoordinate;
+    // std::cout << uv<< std::endl;
+    // uv =ceil(uv*100);
+    // uv = uv/100*320;
+    // int no = (int) uv;
+    // if(check[no] == 0){
+    //   full++;
+    //   std::cout<< no << std::endl;
+    //   xCoordinate = (no%100)*40;
+    //   yCoordinate = (no/100)*4;
+    auto v = Vector(xCoordinate*10, static_cast<int>(yCoordinate) * 5.0, 0.0);
+    initialAlloc->Add(v);
+    std::cout << v << std::endl;
+    full++;
+    // }
   }
   //initialAlloc->Add(Vector(750.0,0.0,0.0));
 
@@ -184,8 +206,6 @@ int main (int argc, char *argv[])
     }
   }
   //mobility.Install(ueNodes.Get (nodeNumber-1));
-  
-
 
   //Install LTE UE devices to the nodes
   NetDeviceContainer ueDevs = lteHelper->InstallUeDevice (ueNodes);
@@ -257,21 +277,11 @@ int main (int argc, char *argv[])
   ns3::ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +
                                              std::to_string(tMin) + "/" + std::to_string(tMax));
 
- //Will add cost231Propagationloss model loss here for and packet loss
+  // Will add cost231Propagationloss model loss here for and packet loss
 
-  // // Consumer
-  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
-  // // Consumer will request /prefix/0, /prefix/1, ...
-  // //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
-  // consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
-  // consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
-  // consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2));                        // first node
-
-  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
-  consumerHelper.SetPrefix("/v2safety/8thStreet/100,20,0/750,0,0/100");
-  consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
-  consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
-  consumerHelper.Install(ueNodes.Get(0));
+  ::ns3::ndn::AppHelper consumerHelper("RealAppStarter");
+  consumerHelper.SetPrefix("/v2safety/8thStreet/@COORD@/2700,0,0/100");
+  consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2.0));
 
   // Producer
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");
@@ -284,10 +294,10 @@ int main (int argc, char *argv[])
   // Simulator::Stop(Seconds(2.9)); // expect 1 distinct request
   Simulator::Stop(Seconds(12.99)); // expect 10 distinct requests
   int no = (int) nodeNumber;
-  std::ofstream of("results/" + std::to_string(no) +
+  std::ofstream of("results/2hopsnoproducer-" + std::to_string(no) +
                    "-tmin=" + std::to_string(tMin) +
                    "-tmax=" + std::to_string(tMax) +
-                   "-2hopsnoproducer.csv");
+                   ".csv");
   of << "Node,Time,Name,Action,X,Y" << std::endl;
   nfd::fw::DirectedGeocastStrategy::onAction.connect([&of] (const ::ndn::Name& name, int type, double x, double y) {
       auto context = Simulator::GetContext();
