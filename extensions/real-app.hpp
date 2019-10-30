@@ -26,6 +26,7 @@
 #include <ndn-cxx/util/scheduler.hpp>
 
 #include <iostream>
+#include "ns3/random-variable-stream.h"
 
 namespace app {
 
@@ -37,31 +38,25 @@ public:
     , m_faceProducer(m_faceConsumer.getIoService())
     , m_scheduler(m_faceConsumer.getIoService())
   {
-    // // register prefix and set interest filter on producer face
-    // m_faceProducer.setInterestFilter("/hello", std::bind(&RealApp::respondToAnyInterest, this, _2),
-    //                                  std::bind([]{}), std::bind([]{}));
-
-    for (int i = 2; i < 13; ++i) {
-      // use scheduler to send interest later on consumer face
-      m_scheduler.scheduleEvent(ndn::time::seconds(i), [this] {
-
-          Name name("/v2safety/8thStreet/0,0,0/700,0,0/100");
-          auto node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
-          auto foobar = node->GetObject<MobilityModel>()->GetPosition();
-
-          m_faceConsumer.expressInterest(ndn::Interest(""),
-                                         std::bind([] {  }),
-                                         std::bind([] {  }),
-                                         std::bind([] {  }));
-        });
-    }
+    ndn::Interest::setDefaultCanBePrefix(true);
+    m_randVar = ns3::CreateObject<ns3::UniformRandomVariable>();
+    // m_randVar->SetAttribute ("Min", ns3::DoubleValue(0));
+    // m_randVar->SetAttribute ("Max", ns3::DoubleValue(0.5));
   }
 
   void
-  run()
+  run(size_t count = 10);
+
+  void
+  setPrefix(const ndn::Name& prefix)
   {
-    m_faceConsumer.processEvents(); // ok (will not block and do nothing)
-    // m_faceConsumer.getIoService().run(); // will crash
+    m_prefix = prefix;
+  }
+
+  ndn::Name
+  getPrefix() const
+  {
+    return m_prefix;
   }
 
 private:
@@ -78,6 +73,9 @@ private:
   ndn::Face m_faceConsumer;
   ndn::Face m_faceProducer;
   ndn::Scheduler m_scheduler;
+  ndn::Name m_prefix;
+
+  ns3::Ptr<ns3::UniformRandomVariable> m_randVar;
 };
 
 } // namespace app

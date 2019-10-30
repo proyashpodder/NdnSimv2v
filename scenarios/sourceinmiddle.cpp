@@ -256,21 +256,15 @@ int main (int argc, char *argv[])
   ns3::ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +
                                              std::to_string(tMin) + "/" + std::to_string(tMax));
 
- //Will add cost231Propagationloss model loss here for and packet loss
+  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
+  // consumerHelper.SetPrefix("/v2safety/8thStreet/200,0,0/700,0,0/100");
+  // consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
+  // consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
+  // consumerHelper.Install(ueNodes.Get(0));
 
-  // // Consumer
-  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
-  // // Consumer will request /prefix/0, /prefix/1, ...
-  // //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
-  // consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
-  // consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
-  // consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2));                        // first node
-
-  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
-  consumerHelper.SetPrefix("/v2safety/8thStreet/200,0,0/700,0,0/100");
-  consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
-  consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
-  consumerHelper.Install(ueNodes.Get(0));
+  ::ns3::ndn::AppHelper consumerHelper("RealAppStarter");
+  consumerHelper.SetPrefix("/v2safety/8thStreet/@COORD@/700,0,0/100");
+  consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2.0));
 
   // Producer
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");
@@ -283,7 +277,7 @@ int main (int argc, char *argv[])
   // Simulator::Stop(Seconds(2.9)); // expect 1 distinct request
   Simulator::Stop(Seconds(12.99)); // expect 10 distinct requests
   int no = (int) nodeNumber;
-  std::ofstream of("results/" + std::to_string(no) +
+  std::ofstream of("results/srcinmiddle-" + std::to_string(no) +
                    "-tmin=" + std::to_string(tMin) +
                    "-tmax=" + std::to_string(tMax) +
                    "-sourceinthemiddle.csv");
@@ -300,7 +294,9 @@ int main (int argc, char *argv[])
         action = "Duplicate";
       else
         action = "Suppressed";
-      of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y <<std::endl;
+
+      // of << context << "," << time << std::endl;
+      of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y << std::endl;
     });
 
   Simulator::Run ();
