@@ -6,7 +6,7 @@ suppressPackageStartupMessages (library(tidyr))
 
 source ("graphs/graph-style.R")
 
-levels=seq(20,200,20)
+levels=seq(20,100,20)
 data=data.frame(TotalNodes = factor(levels=levels), Node=integer(), Time=double(), Name=factor(), Action=factor(), X=double(), Y=double())
 for (number in levels) {
     t = read.csv(file=paste(sep='', 'results/', number, '-tmin=0.020000-tmax=0.100000-cancelasunhelpful.csv'), header=TRUE, sep=",")

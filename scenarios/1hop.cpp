@@ -20,20 +20,19 @@ NS_LOG_COMPONENT_DEFINE ("LteSlOutOfCovrg");
 int main (int argc, char *argv[])
 {
   Ptr<UniformRandomVariable> uv = CreateObject<UniformRandomVariable> ();
-  std::cout << uv->GetValue () << std::endl;
-  Time simTime = Seconds (6);
+  //std::cout << uv->GetValue () << std::endl;
+  Time simTime = Seconds (10);
   bool enableNsLogs = false;
   bool useIPv6 = false;
   //double distance=atoi(argv[1]);
-  int nodeNumber = 20;
+  double distance = 1500;
   double tMin = 0.02;
   double tMax = 0.1;
 
   CommandLine cmd;
   cmd.AddValue("simTime", "Total duration of the simulation", simTime);
   cmd.AddValue("enableNsLogs", "Enable ns-3 logging (debug builds)", enableNsLogs);
-  cmd.AddValue("nodeNumber", "The total nodes will be", nodeNumber);
-
+  cmd.AddValue("distance", "The total nodes will be", distance);
   cmd.AddValue("tmin", "", tMin);
   cmd.AddValue("tmax", "", tMax);
 
@@ -91,6 +90,8 @@ int main (int argc, char *argv[])
 
   //Set pathloss model
   lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::Cost231PropagationLossModel"));
+  lteHelper->SetPathlossModelAttribute ("BSAntennaHeight", DoubleValue(1.5));
+  lteHelper->SetPathlossModelAttribute ("SSAntennaHeight", DoubleValue(1.5));
   // channel model initialization
   lteHelper->Initialize ();
 
@@ -107,10 +108,9 @@ int main (int argc, char *argv[])
     }
 
   NS_LOG_INFO ("Deploying UE's...");
-
   //Create nodes (UEs)
   NodeContainer ueNodes;
-  ueNodes.Create (nodeNumber);
+  ueNodes.Create (3);
   //NS_LOG_INFO ("UE 1 node id = [" << ueNodes.Get (0)->GetId () << "]");
   //NS_LOG_INFO ("UE 2 node id = [" << ueNodes.Get (1)->GetId () << "]");
   //NS_LOG_INFO ("UE 3 node id = [" << ueNodes.Get (2)->GetId () << "]");
@@ -118,7 +118,7 @@ int main (int argc, char *argv[])
   MobilityHelper mobility;
   Ptr<ListPositionAllocator> initialAlloc = CreateObject<ListPositionAllocator> ();
   //this node will generate the interest
-  initialAlloc->Add(Vector(100.0,20.0,0.0));
+  initialAlloc->Add(Vector(0.0,0.0,0.0));
   //these nodes will receive the interest in 1st hop
   /*initialAlloc->Add(Vector(200.0,0.0,0.0));
   //these nodes will receive the interest in first hop and drop it as they are in opposite direction from the destination
@@ -145,58 +145,40 @@ int main (int argc, char *argv[])
     }
     xposition = xposition + inc;
   }*/
-
-  // int full = 1;
-  // int check[400];
-  // for(int i=0; i<400; i++){
-  //   check[i] = 0;
-  // }
-
-  Ptr<UniformRandomVariable> x = CreateObject<UniformRandomVariable>();
-  Ptr<UniformRandomVariable> y = CreateObject<UniformRandomVariable>();
-
-  x->SetAttribute ("Min", ns3::DoubleValue(0));
-  x->SetAttribute ("Max", ns3::DoubleValue(300)); //scaled to 10
-
-  y->SetAttribute ("Min", ns3::DoubleValue(0));
-  y->SetAttribute ("Max", ns3::DoubleValue(4));
-
-  std::vector<std::vector<bool>> check(300, std::vector<bool>(5, false));
-
+  /*
   int full = 1;
-  while (full < nodeNumber) {
-    double xCoordinate = x->GetValue();
-    double yCoordinate = y->GetValue();
+  int check[400];
+  for(int i=0;i<400;i++){
+    check[i] = 0;
+  }
 
-    if (check[static_cast<size_t>(xCoordinate)][static_cast<size_t>(yCoordinate)]) {
-      continue;
+  while(full < nodeNumber-1){
+    Ptr<UniformRandomVariable> uvr = CreateObject<UniformRandomVariable> ();
+    double uv = uvr->GetValue();
+    double xCoordinate,yCoordinate;
+    std::cout << uv<< std::endl;
+    uv =ceil(uv*100);
+    uv = uv/100*320;
+    int no = (int) uv;
+    if(check[no] == 0){
+      full++;
+      std::cout<< no << std::endl;
+      xCoordinate = (no%80)*10;
+      yCoordinate = (no/80)*4;
+      initialAlloc->Add(Vector(xCoordinate,yCoordinate,0.0));
     }
 
-    check[static_cast<size_t>(xCoordinate)][static_cast<size_t>(yCoordinate)] = true;
-
-    // double uv = uvr->GetValue();
-    // double xCoordinate,yCoordinate;
-    // std::cout << uv<< std::endl;
-    // uv =ceil(uv*100);
-    // uv = uv/100*320;
-    // int no = (int) uv;
-    // if(check[no] == 0){
-    //   full++;
-    //   std::cout<< no << std::endl;
-    //   xCoordinate = (no%100)*40;
-    //   yCoordinate = (no/100)*4;
-    auto v = Vector(xCoordinate*10, static_cast<int>(yCoordinate) * 5.0, 0.0);
-    initialAlloc->Add(v);
-    std::cout << v << std::endl;
-    full++;
-    // }
-  }
-  //initialAlloc->Add(Vector(750.0,0.0,0.0));
+  }*/
+  initialAlloc->Add(Vector(distance,0.0,0.0));
+  initialAlloc->Add(Vector(100.0,0.0,0.0));
 
   mobility.SetPositionAllocator(initialAlloc);
   mobility.SetMobilityModel ("ns3::ConstantVelocityMobilityModel");
+  mobility.Install(ueNodes.Get (0));
+  mobility.Install(ueNodes.Get (1));
+  mobility.Install(ueNodes.Get (2));
   //ueNodes.Get (0)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (10, 0, 0));
-  for(int i= 0;i<nodeNumber; i++){
+  /*for(int i= 0;i<nodeNumber-1; i++){
     mobility.Install(ueNodes.Get (i));
     if(i%2 == 0 ){
       ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (10, 0, 0));
@@ -205,7 +187,9 @@ int main (int argc, char *argv[])
       ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (5, 0, 0));
     }
   }
-  //mobility.Install(ueNodes.Get (nodeNumber-1));
+  mobility.Install(ueNodes.Get (nodeNumber-1));*/
+  
+
 
   //Install LTE UE devices to the nodes
   NetDeviceContainer ueDevs = lteHelper->InstallUeDevice (ueNodes);
@@ -277,27 +261,37 @@ int main (int argc, char *argv[])
   ns3::ndn::StrategyChoiceHelper::InstallAll("/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +
                                              std::to_string(tMin) + "/" + std::to_string(tMax));
 
-  // Will add cost231Propagationloss model loss here for and packet loss
+ //Will add cost231Propagationloss model loss here for and packet loss
 
-  ::ns3::ndn::AppHelper consumerHelper("RealAppStarter");
-  consumerHelper.SetPrefix("/v2safety/8thStreet/@COORD@/2700,0,0/100");
-  consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2.0));
+  // // Consumer
+  // ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
+  // // Consumer will request /prefix/0, /prefix/1, ...
+  // //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
+  // consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
+  // consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
+  // consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2));                        // first node
+
+  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
+  consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/200,0,0/100");
+  consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1 7s 1 8s 1 9s 1")); // 10 interests a second
+  consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
+  consumerHelper.Install(ueNodes.Get(0));
 
   // Producer
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");
   // Producer will reply to all requests starting with /prefix
   producerHelper.SetPrefix("/v2safety/8thStreet");
   producerHelper.SetAttribute("PayloadSize", StringValue("1024"));
-  //producerHelper.Install(ueNodes.Get(nodeNumber-1));
+  producerHelper.Install(ueNodes.Get(1));
 
   //ns3::ndn::L3RateTracer::InstallAll("trace.txt", Seconds(1));
   // Simulator::Stop(Seconds(2.9)); // expect 1 distinct request
   Simulator::Stop(Seconds(12.99)); // expect 10 distinct requests
-  int no = (int) nodeNumber;
-  std::ofstream of("results/2hopsnoproducer-" + std::to_string(no) +
+  int no = (int) distance;
+  std::ofstream of("results/" + std::to_string(no) +
                    "-tmin=" + std::to_string(tMin) +
                    "-tmax=" + std::to_string(tMax) +
-                   ".csv");
+                   "-1hop.csv");
   of << "Node,Time,Name,Action,X,Y" << std::endl;
   nfd::fw::DirectedGeocastStrategy::onAction.connect([&of] (const ::ndn::Name& name, int type, double x, double y) {
       auto context = Simulator::GetContext();
@@ -313,19 +307,10 @@ int main (int argc, char *argv[])
         action = "Suppressed";
       of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y <<std::endl;
     });
-    
- /* std::ofstream fullTime ("dataTime.csv");
-  fullTime << "received time" << std::endl;
-  
-    ns3::ndn::Consumer::dataR.connect([&fullTime] (){
-    auto time = Simulator::Now.ToDouble(Time::S);
-    auto context = Simulator::GetContext();
-        fullTime << context << "," << time <<std::endl;
-    });*/
-    
 
   Simulator::Run ();
   Simulator::Destroy ();
   return 0;
 
 }
+
