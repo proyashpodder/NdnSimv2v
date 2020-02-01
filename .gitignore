@@ -6,5 +6,4 @@
 .lock*
 build/
 *.pyc
-file.csv
 .Rhistory
