@@ -28,7 +28,7 @@ int main (int argc, char *argv[])
   int nodeNumber = 50;
   double distance = 400;
   double tMin = 0.02;
-  double tMax = 0.1;
+  double tMax = 0.2;
 
   CommandLine cmd;
   cmd.AddValue("simTime", "Total duration of the simulation", simTime);
@@ -329,7 +329,7 @@ int main (int argc, char *argv[])
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");
   // Producer will reply to all requests starting with /prefix
   producerHelper.SetPrefix("/v2safety/8thStreet");
-  producerHelper.SetAttribute("PayloadSize", StringValue("1024"));
+  producerHelper.SetAttribute("PayloadSize", StringValue("50"));
   producerHelper.Install(ueNodes.Get(nodeNumber-1));
 
   //ns3::ndn::L3RateTracer::InstallAll("trace.txt", Seconds(1));
@@ -362,4 +362,5 @@ int main (int argc, char *argv[])
   return 0;
 
 }
+
 
