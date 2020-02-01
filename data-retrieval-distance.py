@@ -11,6 +11,7 @@ rng = 1
 
 while rng < 6:
     distance = 100
+    tmax=0.2
     timeList  = [0] * 10
     inList = [0] * 10
     dataList = [0] * 10
@@ -20,7 +21,7 @@ while rng < 6:
     while distance < 1001:
         #count = 2.000
         #while count < 2.1:
-        path = 'NS_GLOBAL_VALUE="RngRun='+str(rng)+'" ./waf --run="multihops-nodenumber --distance='+str(distance)+'">>temp/'+str(rng)+str(distance)+'.txt'
+        path = 'NS_GLOBAL_VALUE="RngRun='+str(rng)+'" ./waf --run="multihops-nodenumber --distance='+str(distance)+' --tmax='+str(tmax)+'">>temp/'+str(rng)+str(distance)+'.txt'
         print(path)
         os.system(path)
             #count+= 0.05

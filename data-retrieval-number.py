@@ -10,7 +10,8 @@ while rng < 6:
     timeList  = [0] * 10
     inList = [0] * 10
     dataList = [0] * 10
-    nodeNumber = 10;
+    nodeNumber = 10
+    tmax=0.2
     os.system("rm *.txt")
     csvFile = open('results/fixedmultihopnodenumber-'+str(rng)+'.csv', "a")
     csvWriter = csv.writer( csvFile )
@@ -19,7 +20,7 @@ while rng < 6:
     while nodeNumber < 101:
         #count = 2.000
         #while count < 2.1:
-        path = 'NS_GLOBAL_VALUE="RngRun='+str(rng)+'" ./waf --run="multihops-nodenumber --distance='+str(distance)+' --nodeNumber='+str(nodeNumber)+'">>temp/'+str(nodeNumber)+'.txt'
+        path = 'NS_GLOBAL_VALUE="RngRun='+str(rng)+'" ./waf --run="multihops-nodenumber --distance='+str(distance)+' --nodeNumber='+str(nodeNumber)+' --tmax='+str(tmax)+'">>temp/'+str(nodeNumber)+'.txt'
         print(path)
         os.system(path)
             #count+= 0.05
