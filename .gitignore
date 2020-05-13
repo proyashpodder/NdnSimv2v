@@ -7,3 +7,6 @@
 build/
 *.pyc
 .Rhistory
+.txt
+.log
+.csv

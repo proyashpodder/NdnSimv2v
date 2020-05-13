@@ -1,0 +1,5 @@
+Node,Time,Name,Action,X,Y
+1,3,0,Received,15,10
+1,3,0,Broadcast,15,10
+2,3.05693,0,Received,60,10
+2,3.05693,0,Broadcast,60,10

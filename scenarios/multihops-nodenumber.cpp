@@ -25,8 +25,8 @@ int main (int argc, char *argv[])
   bool enableNsLogs = false;
   bool useIPv6 = false;
   //double distance=atoi(argv[1]);
-  int nodeNumber = 50;
-  double distance = 400;
+  int nodeNumber = 40;
+  double distance = 300;
   double tMin = 0.02;
   double tMax = 0.2;
 
@@ -72,8 +72,10 @@ int main (int argc, char *argv[])
     }
 
   //Set the UEs power in dBm
-  Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (23.0));
-
+  Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (2.0));
+  Config::SetDefault ("ns3::LteUePowerControl::Pcmax", DoubleValue (2.0));
+  Config::SetDefault ("ns3::LteUePowerControl::PscchTxPower", DoubleValue (2.0));
+ // Config::SetDefault ("ns3::LteUePowerControl::PsschTxPower", DoubleValue (15.0));
   //Sidelink bearers activation time
   Time slBearersActivationTime = Seconds (2.0);
 
@@ -181,7 +183,7 @@ int main (int argc, char *argv[])
   Ptr<UniformRandomVariable> y = CreateObject<UniformRandomVariable>();
 
   x->SetAttribute ("Min", ns3::DoubleValue(0));
-  x->SetAttribute ("Max", ns3::DoubleValue(distance/5)); //scaled to 10
+  x->SetAttribute ("Max", ns3::DoubleValue(distance/10)); //scaled to 10
 
   y->SetAttribute ("Min", ns3::DoubleValue(0));
   y->SetAttribute ("Max", ns3::DoubleValue(4));
@@ -227,7 +229,7 @@ int main (int argc, char *argv[])
   //ueNodes.Get (0)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (10, 0, 0));
   for(int i= 0;i<nodeNumber-1; i++){
     mobility.Install(ueNodes.Get (i));
-    if(i%2 == 0 ){
+    if(i%2 == 1 ){
       ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (1, 0, 0));
     }
     else if(i%3 == 0){
@@ -336,11 +338,10 @@ int main (int argc, char *argv[])
   // Simulator::Stop(Seconds(2.9)); // expect 1 distinct request
   Simulator::Stop(Seconds(12.99)); // expect 10 distinct requests
   int no = (int) distance;
-    std::ofstream of("results/data-time-vs-node-number.csv");
-                    //+ std::to_string(no) +
-                   //"-tmin=" + std::to_string(tMin) +
-                   //"-tmax=" + std::to_string(tMax) +
-                  // "-1hop.csv");
+    std::ofstream of("results/new-"+ std::to_string(no) +
+                   "-tmin=" + std::to_string(tMin) +
+                   "-tmax=" + std::to_string(tMax) +
+                   "-cancelasunhelpful.csv");
   of << "Node,Time,Name,Action,X,Y" << std::endl;
   nfd::fw::DirectedGeocastStrategy::onAction.connect([&of] (const ::ndn::Name& name, int type, double x, double y) {
       auto context = Simulator::GetContext();
@@ -356,7 +357,7 @@ int main (int argc, char *argv[])
         action = "Suppressed";
       of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y <<std::endl;
     });
-
+  L2RateTracer::InstallAll ("drop-trace.txt", Seconds (0.5));
   Simulator::Run ();
   Simulator::Destroy ();
   return 0;

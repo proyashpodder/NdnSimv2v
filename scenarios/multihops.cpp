@@ -313,9 +313,9 @@ int main (int argc, char *argv[])
   // consumerHelper.SetAttribute("Frequency", StringValue("1")); // 10 interests a second
   // consumerHelper.Install(ueNodes.Get(0)).Start(Seconds(2));                        // first node
 
-  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
+  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
   consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/1050,0,0/100");
-  consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
+  consumerHelper.SetAttribute("Frequency", StringValue("10")); // 10 interests a second
   consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
   consumerHelper.Install(ueNodes.Get(0));
 
@@ -350,7 +350,7 @@ int main (int argc, char *argv[])
         action = "Suppressed";
       of << context << "," << time << "," << name.get(-1).toSequenceNumber() << "," << action << ","<< x << "," << y <<std::endl;
     });
-
+  L2RateTracer::InstallAll ("drop-trace.txt", Seconds (0.5));
   Simulator::Run ();
   Simulator::Destroy ();
   return 0;
