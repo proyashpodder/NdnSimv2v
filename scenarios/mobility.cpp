@@ -3,7 +3,7 @@
 #include <sstream>
 #include "ns3/core-module.h"
 #include "ns3/mobility-module.h"
-#include "ns3/ns2-mobility-helper.h"
+#include "ns3/custom-helper.h"
 #include "ns3/lte-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
   std::string logFile;
 
   int    nodeNum;
-  double duration;
+  double duration = 10;
   Time simTime = Seconds (15);
   bool enableNsLogs = false;
   bool useIPv6 = false;
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 
   NS_LOG_INFO ("Deploying UE's...");
 
-  Ns2MobilityHelper ns2 = Ns2MobilityHelper (traceFile);
+  CustomHelper ns2 = CustomHelper (traceFile);
 
   // open log file for output
   std::ofstream os;
@@ -213,12 +213,19 @@ int main(int argc, char *argv[])
 
  //Will add cost231Propagationloss model loss here f
 
-  ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
+   ::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerCbr");
+   // Consumer will request /prefix/0, /prefix/1, ...
+   //consumerHelper.SetPrefix("/v2safety/8thStreet/parking");
+   consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/700,0,0/100");
+   consumerHelper.SetAttribute("Frequency", StringValue("1"));
+   consumerHelper.Install(ueNodes.Get(0));
+
+   /*::ns3::ndn::AppHelper consumerHelper("ns3::ndn::ConsumerBatches");
   consumerHelper.SetPrefix("/v2safety/8thStreet/0,0,0/,0,0/100");
   consumerHelper.SetAttribute("Batches", StringValue("2s 1 3s 1 4s 1 5s 1 6s 1")); // 10 interests a second
   consumerHelper.SetAttribute("RetxTimer", StringValue("1000s"));
   consumerHelper.SetAttribute("LifeTime", StringValue("15s"));
-  consumerHelper.Install(ueNodes.Get(0));
+  consumerHelper.Install(ueNodes.Get(0));*/
 
   // Producer
   ::ns3::ndn::AppHelper producerHelper("ns3::ndn::Producer");
@@ -251,6 +258,7 @@ int main(int argc, char *argv[])
     });
   
   Simulator::Run ();
+ // Simulator::Schedule(Seconds(3.0),&main);
   Simulator::Destroy ();
 
   os.close (); // close log file

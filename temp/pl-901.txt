@@ -1,0 +1,7 @@
+Waf: Entering directory `/Users/Proyash/git_repo/ndnSIM/NdnSimv2v/build'
+Waf: Leaving directory `/Users/Proyash/git_repo/ndnSIM/NdnSimv2v/build'
+'build' finished successfully (0.433s)
+2.00000 Interest for 0
+Receieved_by_Producer 
+2.08893 Data for 0
+1 Hop Count for 0

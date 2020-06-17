@@ -1,0 +1,47 @@
+Waf: Entering directory `/Users/Proyash/git_repo/ndnSIM/NdnSimv2v/build'
+Waf: Leaving directory `/Users/Proyash/git_repo/ndnSIM/NdnSimv2v/build'
+'build' finished successfully (0.486s)
+2.00000 Interest for 0
+Receieved_by_Producer 
+2.08893 Data for 0
+1 Hop Count for 0
+2.09091 Interest for 1
+Receieved_by_Producer 
+2.17693 Data for 1
+1 Hop Count for 1
+2.18182 Interest for 2
+Receieved_by_Producer 
+2.24893 Data for 2
+1 Hop Count for 2
+2.27273 Interest for 3
+Receieved_by_Producer 
+2.32893 Data for 3
+1 Hop Count for 3
+2.36364 Interest for 4
+Receieved_by_Producer 
+2.44893 Data for 4
+1 Hop Count for 4
+2.45455 Interest for 5
+Receieved_by_Producer 
+2.52893 Data for 5
+1 Hop Count for 5
+2.54545 Interest for 6
+Receieved_by_Producer 
+2.60893 Data for 6
+1 Hop Count for 6
+2.63636 Interest for 7
+Receieved_by_Producer 
+2.72727 Interest for 8
+2.72893 Data for 7
+1 Hop Count for 7
+Receieved_by_Producer 
+2.80893 Data for 8
+1 Hop Count for 8
+2.81818 Interest for 9
+Receieved_by_Producer 
+2.88893 Data for 9
+1 Hop Count for 9
+2.90909 Interest for 10
+Receieved_by_Producer 
+2.96893 Data for 10
+1 Hop Count for 10

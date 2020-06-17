@@ -1,0 +1,8 @@
+$ns_ at 2.0 "$node_(0) setdest 85.23 95.2 0.46"
+$ns_ at 2.0 "$node_(1) setdest 58.47 108.0 23.10"
+$ns_ at 2.0 "$node_(2) setdest 108.0 85.4 0.27"
+$ns_ at 2.0 "$node_(3) setdest 92.0 115.09 0.56"
+$ns_ at 3.0 "$node_(0) setdest 85.39 95.2 0.16"
+$ns_ at 3.0 "$node_(1) setdest 35.11 108.0 23.37"
+$ns_ at 3.0 "$node_(2) setdest 108.0 85.4 0.00"
+$ns_ at 3.0 "$node_(3) setdest 92.0 114.71 0.38"

@@ -1,576 +1,49 @@
-g <- ggplot(data, aes(y = time, x = distance)) + geom_line()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_bar()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_boxplot()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_contour()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_density()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_dotplot()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_errorbar()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_map()
-g <- ggplot(data, aes(y = time, x = distance)) + geom_area()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_curve()
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point()
-g+scale_x_discrete(breaks=seq(0,100,10))
-g
-g+scale_x_discrete(breaks=seq(0,90,10))
-g+scale_x_discrete(breaks=seq(10,90,10))
-g+scale_x_discrete(name="ddd", breaks=seq(10,90,10))
-p1<-ggplot()+geom_line(aes(y=time, x=distance), data=data)
-p1
-p1<-ggplot()+geom_line(aes(y=time, x=distance), data=data)
-g+scale_x_discrete(breaks=seq(0,1000,100))
-View(data)
-g+scale_x_discrete(breaks=seq(100,1000,100))
-p1<-ggplot()+geom_line(aes(y=time, x=distance), data=data)+ scale_x_continuous(breaks=seq(100,1000,100))
-p1
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(breaks=seq(100,1000,100))
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(breaks=seq(100,1000,100)) + scale_y_continuous(breaks=seq(0,3,0.2)
-,kk
-kk
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(breaks=seq(100,1000,100)) + scale_y_continuous(breaks=seq(0,3,0.2)
-ghgh"
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(breaks=seq(100,1000,100)) + scale_y_continuous(breaks=seq(0,3,0.2))
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(name = “time in second”, breaks=seq(100,1000,100))
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(breaks=seq(100,1000,100)) + scale_y_continuous(name="hello",breaks=seq(0,3,0.2))
-g
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(breaks=seq(100,1000,100)) + scale_y_continuous(name=”time (s)",breaks=seq(0,3,0.2))
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(breaks=seq(100,1000,100)) + scale_y_continuous(name=”time(s)",breaks=seq(0,3,0.2))
-g <- ggplot(data, aes(y = time, x = distance)) + geom_point() + scale_x_continuous(breaks=seq(100,1000,100)) + scale_y_continuous(name="time(s)",breaks=seq(0,3,0.2))
-g
-multi.data<-read.csv(file="multihop.csv")
-multi.data=multi.data.frame(X=double(), Y=double())
-multi.data=data.frame(X=double(), Y=double())
-view(multi.data)
-View(multi.data)
-View(data)
-ggsave("graph.pdf",plot=g, width=8, height=4)
-new.data<- read.csv(file="node-position.csv")
-View(new.data)
-g3<-ggplot(new.data,aes(y=Y,x=X)+geom_point())
-g3<-ggplot(new.data,aes(y=Y,x=X))+geom_point()
-g3
-g3<-ggplot(new.data,aes(y=Y,x=X))+geom_line()
-g3
-data<-read.csv(file="multihop.csv")
-adjusted<-subset(data,X,Y)
-adjusted = subset(data, Action != "Duplicate" & Action != "Suppressed")
-View(adjusted)
-View(adjusted)
-adjusted = subset(data, Action == "Broadcast")
-View(adjusted)
-g4<-ggplot(adjusted,aes(y=Y,x=X))+geom_point()
-g4
-g4
-g3
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
+theme_custom <- function (base_size = 10, base_family = "serif") {#
+  theme_grey(base_size = base_size, base_family = base_family) %+replace%#
+    theme(#
+      line =               element_line(colour = "black", size = 0.5, linetype = 1, lineend = "butt"),#
+      rect =               element_rect(fill = "white", colour = "black", size = 0.5, linetype = 1),#
+      text =               element_text(family = base_family, face = "plain", colour = "black", size = base_size, hjust = 0.5, vjust = 0.5, angle = 0, lineheight = 0.5, margin=margin(0.1, 0.1, 0.1, 0.1, unit="cm"), debug=FALSE),#
+      axis.text =          element_text(size = rel(0.8), colour = "grey50"),#
+      strip.text =         element_text(size = rel(0.8)),#
 #
-source ("graphs/graph-style.R")
-setwd("~/git_repo/ndnSIM/NdnSimv2v/")
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")
-data=data.frame(Node=integer(), Time=double(), Name=factor(), Action=factor(), X=double(), Y=double(), Tmin=factor(levels=tmin))
-tmin=c("0.050000")#
-## tmin=c("0.020000")#
-data=data.frame(Node=integer(), Time=double(), Name=factor(), Action=factor(), X=double(), Y=double(), Tmin=factor(levels=tmin))
-t = read.csv(file=paste(sep='','results/100-tmin=0.050000-tmax=0.200000-sourceinthemiddle.csv'),header=TRUE,sep=",")
-t$Tmin = factor(time, levels=tmin)#
-    data = rbind(t, data)
-data=rbind(t,data)
-s = subset(data, Name < 5 & Action!="Suppressed" & Action!="Duplicate")
-g <- ggplot(s, aes(x=X, y=Y)) +#
-    theme_custom() +#
-    geom_point(aes(colour=Action, size=Action)) +#
-    scale_size_manual(values=c(4,1)) +#
-    facet_grid(Name ~ .)
-g
-s = subset(data, Name < 1 & Action!="Suppressed" & Action!="Duplicate")
-g <- ggplot(s, aes(x=X, y=Y)) +#
-    theme_custom() +#
-    geom_point(aes(colour=Action, size=Action)) +#
-    scale_size_manual(values=c(4,1)) +#
-    facet_grid(Name ~ .)
-g
-ggsave("graphs/pdfs/1-srcinmiddle-map.pdf", plot=g, width=8, height=5, device=cairo_pdf)
-t = read.csv(file=paste(sep='','results/multihop.csv'),header=TRUE,sep=",")
-data=rbind(t,data)
-s = subset(data, Name < 1 & Action!="Suppressed" & Action!="Duplicate")
-g9 <- ggplot(s, aes(x=X, y=Y)) +#
-+     theme_custom() +#
-+     geom_point(aes(colour=Action, size=Action)) +#
-+     scale_size_manual(values=c(4,1)) +#
-+     facet_grid(Name ~ .)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-#
-for(i in levels){#
-      t=read.csv(file=paste(sep'','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-       data = rbind(t, data)#
+      axis.line =          element_blank(),#
+      axis.text.x =        element_text(family = base_family, size = base_size * 0.7, lineheight = 0.8, vjust = 1.2),#
+      axis.text.y =        element_text(family = base_family, size = base_size * 0.7, lineheight = 0.8, hjust = 1.2),#
+      axis.ticks =         element_line(colour = "black", size=0.2),#
+      axis.title.x =       element_text(family = base_family, size = base_size, vjust = 0.5),#
+      axis.title.y =       element_text(family = base_family, size = base_size, angle = 90, vjust = 0.5),#
+      axis.ticks.length =  unit(0.15, "cm"),#
+      ## axis.ticks.margin =  unit(0.1, "cm"),#
+      legend.background =  element_rect(fill=NA, colour=NA, size=0.05),#
+      legend.margin =      margin(0.05, 0.05, 0.05, 0.05, "cm"),#
+      legend.key =         element_rect(fill = "grey95", colour = "white"),#
+      legend.key.size =    unit(0.9, "cm"),#
+      legend.key.height =  unit(0.5, "lines"),#
+      legend.key.width =   NULL,#
+      legend.text =        element_text(family = base_family, size = base_size * 0.6),#
+      legend.text.align =  NULL,#
+      legend.title =       element_text(family = base_family, size = base_size * 0.6, face = "bold", hjust = 0),#
+      legend.title.align = NULL,#
+      legend.position =    "right",#
+      legend.direction =   NULL,#
+      legend.justification = "center",#
+      legend.box =         NULL,#
+      panel.background =   element_rect(fill = "white", colour = NA),#
+      panel.border =       element_rect(fill = NA, colour = "grey50"),#
+      panel.grid.major =   element_line(colour = "grey60", size = 0.1),#
+      panel.grid.minor =   element_line(colour = "grey70", size = 0.1, linetype="dotted"),#
+      ## panel.margin =       unit(c(0.1, 0.1, 0.1, 0.1), "lines"),#
+      strip.background =   element_rect(fill = NA, colour = NA),#
+      strip.text.x =       element_text(family = base_family, size = base_size * 0.8),#
+      strip.text.y =       element_text(family = base_family, size = base_size * 0.8, angle = -90),#
+      plot.background =    element_rect(colour = NA, fill = "white"),#
+      plot.title =         element_text(family = base_family, size = base_size),#
+      plot.margin =        unit(c(0, 0, 0, 0), "lines")#
+    )#
 }
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
+#!/usr/bin/env Rscript#
 #
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-#
-for(i in levels){#
-      t=read.csv(file=paste(sep' ','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-       data = rbind(t, data)#
-}
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-#
-for(i in levels){#
-      t=read.csv(file=paste(sep' ','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-for(i in levels) {#
-      t=read.csv(file=paste(sep' ','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-for(i in levels) {#
-      t=read.csv(file=paste(sep' ','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-for(i in levels) {#
-      t=read.csv(file=paste(sep=' ','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-levels=seq(1,5,1)#
-#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-data=data.frame(distance=double(), timeTogetData=double())
-levels=seq(1,5,1)#
-#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-counts = data %>% group_by(timeTogetData) %>% tally()
-coutsWithErrors = counts %>% group_by(timeTogetData) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-g1<- ggplot(countsWithErrors, aes(x=distance)) + geom_bar(stat="identity",aes(y=mean))
-countsWithErrors = counts %>% group_by(timeTogetData) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-g1<- ggplot(countsWithErrors, aes(x=distance)) + geom_bar(stat="identity",aes(y=mean))
-g1
-counts = data %>% group_by(distance) %>% tally()
-countsWithErrors = counts %>% group_by(distance) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-g1<- ggplot(countsWithErrors, aes(x=distance)) + geom_bar(stat="identity",aes(y=mean))
-g1
-counts = summarize(Mean=mean(n), Min=min(n), Max=max(n))
-counts = data %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-counts = data %>% group_by(distance) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-warnings()
-counts = data %>% group_by(distance) %>% tally()
-View(counts)
-data = data[0:1]
-View(data)
-data = data[0:2]
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-data=data.frame(distance=double(), timeTogetData=double())
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-View(data)
-adjusted= data[0:2]
-View(adjusted)
-counts = adjusted %>% group_by(timeTogetData)
-View(counts)
-counts = adjusted %>% group_by(timeTogetData) >%> tally()
-counts = adjusted %>% group_by(timeTogetData) %>% tally()
-View (counts)
-countsErr = counts %>% group_by(timeTogetData) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-View(countsErr)
-View(adjusted)
-counts = adjusted %>% group_by(distance) %>% tally()
-View(counts)
-countsErr = counts %>% group_by(distance) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-View(countsErr)
-counts = adjusted %>% group_by(distance) %>% sum()
-View(counts)
-counts = adjusted %>% group_by(distance) %>% average()
-counts = adjusted %>% group_by(distance) %>% avrg()
-counts = adjusted %>% group_by(distance,timeTogetData) %>% avrg()
-counts = adjusted %>% group_by(distance,timeTogetData) %>% tally()
-View(counts)
-countsErr = counts %>% group_by(distance,timeTogetData) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-View(countsErr)
-counts = adjusted %>% group_by(distance,timeTogetData) %>% sum()
-View(counts)
-counts = adjusted %>% group_by(distance,timeTogetData) %>% mean()
-counts = adjusted %>% group_by(distance,timeTogetData) %>% mean(n)
-counts = adjusted %>% group_by(distance) %>% mean(n)
-counts = adjusted %>% group_by(timeTogetData,distance) %>% tally(n)
-counts = adjusted %>% group_by(timeTogetData,distance) %>% tally()
-View(counts)
-counts = adjusted %>% group_by(distance) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-counts = adjusted %>% group_by(distance)
-View(counts)
-View(adjusted)
-counts = adjusted %>% group_by(distance) %>% tally(n)
-counts = adjusted %>% group_by(distance) %>% tally()
-VIew(counts)
-View(counts)
-counts = adjusted %>% group_by(distance) %>% summarize(Mean=mean(n))
-View(counts)
-counts = adjusted %>% group_by(distance) %>% summarize_at(Mean=mean(n))
-counts = adjusted %>% group_by(distance) %>% summarize_at(vars(-distance, funs(mean())
-counts = adjusted %>% group_by(distance) %>% summarize_at(vars(-distance, funs(mean()))
-counts = adjusted %>% group_by(distance) %>% summarize_at(vars(-distance, funs(mean())))
-counts = adjusted %>% group_by(distance) %>% summarize_at(vars(-distance), funs(mean()))
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(distance=double(), timeTogetData=double())#
-t = read.csv(file="results/data-retrieval-distance-rng1.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = distance)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-distance.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", breaks=seq(0,1.6,0.2))+scale_x_continuous(name="distance (m)", breaks=seq(0,1000,100)), width=8, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(distance=double(), timeTogetData=double())#
-t = read.csv(file="results/fixedmultihopnodenumberrng1.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = distance)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", limits=c(1, 2))+scale_x_continuous(name="number of nodes", limits=c(10,90)), width=8, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(distance=double(), timeTogetData=double())#
-t = read.csv(file="results/fixedmultihopnodenumber-1.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = distance)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", limits=c(1, 2))+scale_x_continuous(name="number of nodes", limits=c(10,90)), width=8, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(distance=double(), timeTogetData=double())#
-t = read.csv(file="results/fixedmultihopnodenumber-1.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = nodenumber)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", limits=c(1, 2))+scale_x_continuous(name="number of nodes", limits=c(10,90)), width=8, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(nodenumber=double(), timeTogetData=double())#
-t = read.csv(file="results/fixedmultihopnodenumber-1.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = nodenumber)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", limits=c(1, 2))+scale_x_continuous(name="number of nodes", limits=c(10,90)), width=8, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(nodenumber=double(), timeTogetData=double())#
-t = read.csv(file="results/fixedmultihopnodenumber-1.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = nodenumber)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", limits=c(0, 1))+scale_x_continuous(name="number of nodes", limits=c(10,100)), width=8, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(nodenumber=double(), timeTogetData=double())#
-t = read.csv(file="results/fixedmultihopnodenumber-1.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = nodenumber)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", breaks=seq(0,1,0.1))+scale_x_continuous(name="number of nodes", breaks=seq(10,100,10)), width=8, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(nodenumber=double(), timeTogetData=double())#
-t = read.csv(file="results/fixedmultihopnodenumber-2.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = nodenumber)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", breaks=seq(0,1,0.1))+scale_x_continuous(name="number of nodes", breaks=seq(10,100,10)), width=8, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-data=data.frame(nodenumber=double(), timeTogetData=double())#
-t = read.csv(file="results/fixedmultihopnodenumber-1.csv")#
-data = rbind(t,data)#
-g <- ggplot(data, aes(y = timeTogetData, x = nodenumber)) + geom_point() + theme_custom() + scale_size_manual(values=c(4,1))#
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", breaks=seq(0,1,0.2))+scale_x_continuous(name="number of nodes", breaks=seq(10,100,10)), width=8, height=4, device=cairo_pdf)
-g
-g
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", breaks=seq(0.4,1,0.2))+scale_x_continuous(name="number of nodes", breaks=seq(10,100,10)), width=8, height=4, device=cairo_pdf)
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", limits=c(0,1,0.2))+scale_x_continuous(name="number of nodes", breaks=seq(10,100,10)), width=8, height=4, device=cairo_pdf)
-ggsave("graphs/pdfs/data-time-nodenumber.pdf", plot=g+scale_y_continuous(name="data-retrieval time (s)", limits=c(0,1))+scale_x_continuous(name="number of nodes", breaks=seq(10,100,10)), width=8, height=4, device=cairo_pdf)
-View(adjusted)
-my_sum<-adjusted %>% group_by(distance) %>% summarise(n=n(), mean=mean(timeTogetData))
-View(my_sum)
-my_sum<-adjusted %>% group_by(distance) %>% summarise(mean=mean(timeTogetData))
-VIew(my_sum)
-View(my_sum)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}
-adjusted=data[0:2]
-View(adjusted)
-my_sum<-adjusted %>% group_by(distance) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))
-View(my_sum)
-g2 <- ggplot(my_sum, aes(x=distance)) +#
-    geom_bar(stat="identity", aes(y=Mean, colour="Blue", fill="forestgreen"), position="dodge") +#
-    geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-    theme_custom()
-g2
-g2 <- ggplot(my_sum, aes(x=distance)) +#
-    geom_bar(stat="identity", aes(y=mean, colour="Blue", fill="forestgreen"), position="dodge") +#
-    geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-    theme_custom()
-g2
-ggsave("graphs/pdfs/error-graph.pdf", plot=g2, width=6, height=4, device=cairo_pdf)
-g2 <- ggplot(my_sum, aes(x=distance)) +#
-    geom_bar(stat="identity", aes(y=mean, colour="Blue"), position="dodge") +#
-    geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-    theme_custom()
-g2
-g2 <- ggplot(my_sum, aes(x=distance)) +#
-    geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-    geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-    theme_custom()
-g2
-ggsave("graphs/pdfs/error-graph.pdf", plot=g2, width=6, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-adjusted=data[0:2]#
-my_sum<-adjusted %>% group_by(distance) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))#
-g2 <- ggplot(my_sum, aes(x=distance)) +#
-     geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-     geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-     theme_custom()#
-ggsave("graphs/pdfs/error-graph.pdf", plot=g2, width=6, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-adjusted=data[0:2]#
-my_sum<-adjusted %>% group_by(distance) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))#
-g2 <- ggplot(my_sum, aes(x=distance)) +#
-     geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-     geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-     theme_custom()#
-ggsave("graphs/pdfs/error-graph.pdf", plot=g2+scale_y_continuous(name="data-retrieval time (s)", limits=c(0,2))+scale_x_continuous(name="distance (m)", breaks=seq(100,1000,50)),, width=6, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/fixedmultihopnodenumber-',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-my_sum<-data %>% group_by(nodenumber) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))#
-g2 <- ggplot(my_sum, aes(x=nodenumber)) +#
-     geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-     geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-     theme_custom()#
-ggsave("graphs/pdfs/error-graph-nodenumber.pdf", plot=g2+scale_y_continuous(name="data-retrieval time (s)", limits=c(0,1))+scale_x_continuous(name="distance (m)", breaks=seq(10,100,10)),, width=6, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/fixedmultihopnodenumber-',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-my_sum<-data %>% group_by(nodenumber) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))#
-g2 <- ggplot(my_sum, aes(x=nodenumber)) +#
-     geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-     geom_errorbar(aes(ymin=Min, ymax=Max, group=nodenumber), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-     theme_custom()#
-ggsave("graphs/pdfs/error-graph-nodenumber.pdf", plot=g2+scale_y_continuous(name="Data-retrieval time (s)", limits=c(0,1))+scale_x_continuous(name="Number of nodes)", breaks=seq(10,100,10)),, width=6, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/fixedmultihopnodenumber-',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-my_sum<-data %>% group_by(nodenumber) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))#
-g2 <- ggplot(my_sum, aes(x=nodenumber)) +#
-     geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-     geom_errorbar(aes(ymin=Min, ymax=Max, group=nodenumber), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-     theme_custom()#
-ggsave("graphs/pdfs/error-graph-nodenumber.pdf", plot=g2+scale_y_continuous(name="Data-retrieval time (s)", limits=c(0,1))+scale_x_continuous(name="Number of nodes", breaks=seq(10,100,10)),, width=6, height=4, device=cairo_pdf)
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-adjusted=data[0:2]
-View(adjusted)
-my_sum<-adjusted %>% group_by(distance) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))
-subdata <- subset(adjusted, distance=1000)
-View(subdata)
-subdata <- subset(adjusted, distance==1000)
-View(subdata)
-sub<-subdata[2:3]
-sub<-subdata[1:2]
-View(sub)
-sub<-subdata[2]
-View(sub)
-se = sd(sub) / sqrt(length(sub))
-sd <- sd(sub)
-View(sub)
-vec <- c(1.2889,1.2905,1.2217,1.3769,1.2057)
-sd<-sd(vec)
-print(sd)
-sd <- sqrt(var(sub))
-sd
-se <- sd(sub) / sqrt(length(sub))
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
-#
-source ("graphs/graph-style.R")#
-#
-levels=seq(20,100,20)#
-data=data.frame(TotalNodes = factor(levels=levels), Node=integer(), Time=double(), Name=factor(), Action=factor(), X=double(), Y=double())#
-for (number in levels) {#
-    t = read.csv(file=paste(sep='', 'results/', number, '-tmin=0.020000-tmax=0.100000-cancelasunhelpful.csv'), header=TRUE, sep=",")#
-    ## t = t[-c(5,6)]#
-    ## t = t[sample(1:nrow(t), 70, replace=FALSE),]#
-    ## ## t = t[seq(1,nrow(t),2)]#
-    ## names(t) = c("Time", "Delay")#
-    ## t$Distance = factor(distance, levels=levels)#
-    t$TotalNodes = factor(number, levels=levels)#
-    data = rbind(t, data)#
-}
-adjusted = subset(data, Action != "Duplicate" & Action != "Suppressed")#
-## levels(adjusted$Action) = c("Broadcast", "Received", "Received", "Suppressed")#
-#
-## p.Wages.all.A_MEAN <- Wages.all %>%#
-##                   group_by(`Career Cluster`, Year)%>%#
-##                   summarize(ANNUAL.MEAN.WAGE = mean(A_MEAN))#
-counts = adjusted %>% group_by(Action, Name, TotalNodes) %>% tally()#
-#
-countsWithErrors = counts %>% group_by(Action, TotalNodes) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-g2 <- ggplot(countsWithErrors, aes(x=TotalNodes)) +#
-    geom_bar(stat="identity", aes(y=Mean, colour=Action, fill=Action), position="dodge") +#
-    geom_errorbar(aes(ymin=Min, ymax=Max, group=Action), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-    theme_custom()
-g2
 suppressPackageStartupMessages (library(ggplot2))#
 suppressPackageStartupMessages (library(dplyr))#
 suppressPackageStartupMessages (library(tidyr))#
@@ -588,140 +61,344 @@ for (number in levels) {#
     ## t$Distance = factor(distance, levels=levels)#
     t$TotalNodes = factor(number, levels=levels)#
     data = rbind(t, data)#
-}
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
+}#
 #
-source ("graphs/graph-style.R")#
+s = subset(data, TotalNodes==200 & Action!="Suppressed" & Action!="Duplicate")#
 #
-## tmin=c("0.010000", "0.020000", "0.030000", "0.040000", "0.050000", "0.060000", "0.070000", "0.080000", "0.090000", "0.100000")#
-tmax=c("0.100000", "0.200000", "0.300000", "0.400000", "0.500000", "0.600000")#
-data=data.frame(Node=integer(), Time=double(), Name=factor(), Action=factor(), X=double(), Y=double(), Tmax=factor(levels=tmax))#
-for (time in tmax) {#
-    t = read.csv(file=paste(sep='', 'results/100-tmin=0.050000-tmax=', time ,'-cancelasunhelpful.csv'), header=TRUE, sep=",")#
-    ## t = t[-c(5,6)]#
-    t$Tmax = factor(time, levels=tmax)#
-    data = rbind(t, data)#
-}
-suppressPackageStartupMessages (library(ggplot2))#
-suppressPackageStartupMessages (library(dplyr))#
-suppressPackageStartupMessages (library(tidyr))#
+g <- ggplot(s, aes(x=X, y=Y)) +#
+    theme_custom() +#
+    geom_point(aes(colour=Action, size=Action)) +#
+    scale_size_manual(values=c(4,1)) +#
+    facet_grid(Name ~ .)#
 #
-source ("graphs/graph-style.R")#
-#
-## tmin=c("0.010000", "0.020000", "0.030000", "0.040000", "0.050000", "0.060000", "0.070000", "0.080000", "0.090000", "0.100000")#
-tmax=c("0.100000", "0.200000", "0.300000", "0.400000", "0.500000", "0.600000")#
-data=data.frame(Node=integer(), Time=double(), Name=factor(), Action=factor(), X=double(), Y=double(), Tmax=factor(levels=tmax))#
-for (time in tmax) {#
-    t = read.csv(file=paste(sep='', 'results/new-200-tmin=0.020000-tmax=', time ,'-cancelasunhelpful.csv'), header=TRUE, sep=",")#
-    ## t = t[-c(5,6)]#
-    t$Tmax = factor(time, levels=tmax)#
-    data = rbind(t, data)#
-}
 adjusted = subset(data, Action != "Duplicate" & Action != "Suppressed")#
 ## levels(adjusted$Action) = c("Broadcast", "Received", "Received", "Suppressed")#
 #
 ## p.Wages.all.A_MEAN <- Wages.all %>%#
 ##                   group_by(`Career Cluster`, Year)%>%#
 ##                   summarize(ANNUAL.MEAN.WAGE = mean(A_MEAN))#
-counts = adjusted %>% group_by(Action, Name, Tmax) %>% tally()#
+counts = adjusted %>% group_by(Action, Name, TotalNodes) %>% tally()#
 #
-countsWithErrors = counts %>% group_by(Action, Tmax) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))#
+countsWithErrors = counts %>% group_by(Action, TotalNodes) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))#
 #
     ## summarize(Time=count(Time))#
 #
-g2 <- ggplot(countsWithErrors, aes(x=Tmax)) +#
+g2 <- ggplot(countsWithErrors, aes(x=TotalNodes)) +#
     geom_bar(stat="identity", aes(y=Mean, colour=Action, fill=Action), position="dodge") +#
     geom_errorbar(aes(ymin=Min, ymax=Max, group=Action), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-    theme_custom()
-g2
+    theme_custom()#
+#
+## g <- ggplot(data, aes(x=Time)) +#
+##     xlab("Time, s") +#
+##     ylab("Delay, milliseconds") +#
+##     geom_point(aes(y=Delay, colour=Distance)) +#
+##     theme_custom()#
+ggsave("graphs/pdfs/map.pdf", plot=g, width=12, height=8, device=cairo_pdf)#
+ggsave("graphs/pdfs/suppressions.pdf", plot=g2, width=6, height=4, device=cairo_pdf)
+suppressPackageStartupMessages (library(ggplot2))
+pwd
+install.packages("tidyverse")
+my_packages <- c("tidyverse", "broom", "coefplot", "cowplot", "gapminder", "GGally", "ggrepel", "ggridges", "gridExtra",#
+"here", "interplot", "margins", "maps", "mapproj", "mapdata", "MASS", "quantreg", "rlang", "scales", "survey", "srvyr", "viridis", "viridisLite", "devtools")
+install.packages(my_packages,#
+repos = "http://cran.rstudio.com")
+devtools::install_github("kjhealy/socviz")
+print("Hello World")
+source("/Users/Proyash/demo.txt")
+print("Hello World")
+source("/Users/Proyash/demo.txt")
+source("~/Users/Proyash/demo.txt")
+source("~/demo.txt")
+print(paste(lastName,firstName,sep =","))
+firstName <_ "Proyash"
+firstName<_"Proyash"
+firstName<_ Proyash
+firstName<_ "Proyash"
+print("Hello world")
+firstName <_ "Proyash"
+firstName <- "Proyash"
+lastName <- "Podder"
+print(paste(lastName,firstName,sep=","))
+hello <- "Hello"
+name <- readline("Please enter your name: ")
+print(paste(hello,name))
+temp <- readline("please type the temperature")
+c = as.double(temp)
+f = (9/5) * c + 32
+print(f)
+source("~/if_else.R")
+mtcars[,1]
+summary(mtcars[,1])
+summary(mtcars[10,1])
+mtcars
+sub<-subset(mtcars,cyl==8)
+sub
+subset(mtcars,cyl==8)
+echo<- function(s,x) print(paste(s,x)
+echo("The value of pi is:",pi)
+echo<- function(s,x) print(paste(s,x) echo("the value of pi is:", pi)
+echo<- function(s,x) print(paste(s,x)) echo("the value of pi is:", pi)
+distance <- function(x1,y1,x2,y2){sqrt((x1-x2)^2 + (y1-y2)^2)}
+print(distance(0,1,1,0))
+area<-function(a,b,c){}
+a<-distance(0,0,0,1)
+b<-distance(0,1,1,0)
+c<-distance(1,0,0,0)
+area<-function(a,b,c){ s<-((a+b+c)/2) }
+findS<-function(a,b,c){s<-((a+b+c)/2)}
+s<-findS(a,b,c)
+s
+area<-function(s,a,b,c){sqrt(s*(s-a)*(s-b)*(s-c))}
+area
+a<-area(s,a,b,c)
+a
+print(distance(x1=1,y1=2,x2=2,y2=4))
+distance2d<-function(x1=0,x2=0,y1=1,y2=1)
+distance2d<-function(x1=0,x2=0,y1=1,y2=1))
+distance2d<-function(x1=0,x2=0,y1=1,y2=1)
+aaa
+distance2d<-function(x1=0,x2=0,y1=1,y2=1)
+aa
+summation<-function{c=n*(n+1)/2}
+summation<-function(c=n*(n+1)/2) {print(c)}
+n=15
+summation()
+summation(5)
+power_func<-func(x){function(n) {x^n}}
+power_func<-func(x){f<-function(n) {x^n}}
+power_func<-func(x){f<-function(n) {x^n} f}
+power_func<-funcion(x){f<-function(n) {x^n}}
+power_func<-function(x){f<-function(n) {x^n}}
+echo(power_func(3)(10))
+power_func(3)(10)
+install.packages("tm")  # for text mining#
+install.packages("wordcloud") # word-cloud generator #
+install.packages("RColorBrewer") # color palettes
+install.packages("tm")
+library("tm")#
+library("wordcloud")#
+library("RColorBrewer")
+?word
+?wordcloud
+firstName <- "John" lastName <- "Smith"
+firstName <- "John"
+lastName <- "Smith"
+print(paste(lastName, firstName))
+print(paste(lastName, firstName, sep = ", "))
+library(ggplot)
+library("ggplot2")
+ggplot
+data<-head(trees,15)
+View(data)
+ggplot(data,aes(x= Girth, y=Height))
+ggplot(data,aes(x= Girth, y=Height)) + geom_point()
+ggplot(data,aes(x= Girth, y=Height)) + geom_bar()
+ggplot(data,aes(x= Girth, y=Height)) + geom_line()
+// hee
+#he
+2^2
+BOD
+setwd('~/git_repo/ndnSIM/NdnSimv2v/')
+#!/usr/bin/env Rscript#
+#
 suppressPackageStartupMessages (library(ggplot2))#
 suppressPackageStartupMessages (library(dplyr))#
 suppressPackageStartupMessages (library(tidyr))#
 #
 source ("graphs/graph-style.R")#
 #
+data= read.csv('results/dis-freq-packetLoss.csv')#
+View(data)
+ggplot(data,aes(distance,percentage)) + geom_line(e(color="steelblue", size=1)+ geom_point(color="steelblue")
+g2
+g <- ggplot(data,aes(x=distance,y=percentage)) + geom_line(e(color="steelblue", size=1)+ geom_point(color="steelblue") + facet_grid(frequency ~ .)
+g
+View(data)
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(e(color="steelblue", size=1)+ geom_point(color="steelblue") + facet_grid(frequency ~ .)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/dis-freq-packetLoss.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(e(color="steelblue", size=1)+ geom_point(color="steelblue") + facet_grid(frequency ~ .)
+g
 ## tmin=c("0.010000", "0.020000", "0.030000", "0.040000", "0.050000", "0.060000", "0.070000", "0.080000", "0.090000", "0.100000")#
-tmax=c("0.100000", "0.200000", "0.300000", "0.400000", "0.500000", "0.600000")#
+tmin=c("0.010000")#
+## tmax=c("0.100000", "0.200000", "0.300000", "0.400000", "0.500000", "0.600000")#
+tmax=c("0.200000")#
 data=data.frame(Node=integer(), Time=double(), Name=factor(), Action=factor(), X=double(), Y=double(), Tmax=factor(levels=tmax))#
 for (time in tmax) {#
-    t = read.csv(file=paste(sep='', 'results/new-200-tmin=0.020000-tmax=', time ,'-cancelasunhelpful.csv'), header=TRUE, sep=",")#
+    t = read.csv(file=paste(sep='', 'results/2hopsnoproducer-400-tmin=0.010000-tmax=', time ,'.csv'), header=TRUE, sep=",")#
     ## t = t[-c(5,6)]#
     t$Tmax = factor(time, levels=tmax)#
     data = rbind(t, data)#
-}
-adjusted = subset(data, Action != "Duplicate" & Action != "Suppressed")#
-## levels(adjusted$Action) = c("Broadcast", "Received", "Received", "Suppressed")#
+}#
 #
-## p.Wages.all.A_MEAN <- Wages.all %>%#
-##                   group_by(`Career Cluster`, Year)%>%#
-##                   summarize(ANNUAL.MEAN.WAGE = mean(A_MEAN))#
-counts = adjusted %>% group_by(Action, Name, Tmax) %>% tally()#
+s = subset(data, Name<5 & Action!="Suppressed" & Action!="Duplicate")#
 #
-countsWithErrors = counts %>% group_by(Action, Tmax) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))#
+g <- ggplot(s, aes(x=X, y=Y)) +#
+    theme_custom() +#
+    geom_point(aes(colour=Action, size=Action)) +#
+    scale_size_manual(values=c(4,1)) +#
+    facet_grid(Name ~ .)
+g
+data= read.csv('results/dis-freq-packetLoss.csv')#
 #
-    ## summarize(Time=count(Time))#
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(e(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)
+clear
+data= read.csv('results/dis-freq-packetLoss.csv')#
 #
-g2 <- ggplot(countsWithErrors, aes(x=Tmax)) +#
-    geom_bar(stat="identity", aes(y=Mean, colour=Action, fill=Action), position="dodge") +#
-    geom_errorbar(aes(ymin=Min, ymax=Max, group=Action), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-    theme_custom()
-g2
-ggsave("graphs/pdfs/new-suppression-vs-timers-bars.pdf", plot=g2, width=6, height=4, device=cairo_pdf)
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)
+g
+ggsave("graphs/pdfs/dist-freq-packetLoss.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
 suppressPackageStartupMessages (library(ggplot2))#
 suppressPackageStartupMessages (library(dplyr))#
 suppressPackageStartupMessages (library(tidyr))#
 #
 source ("graphs/graph-style.R")#
 #
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-adjusted=data[0:2]#
-my_sum<-adjusted %>% group_by(distance) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))#
-g2 <- ggplot(my_sum, aes(x=distance)) +#
-     geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-     geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-     theme_custom()#
-ggsave("graphs/pdfs/error-graph.pdf", plot=g2+scale_y_continuous(name="Data-retrieval time (s)", limits=c(0,2))+scale_x_continuous(name="Distance (m)", breaks=seq(100,1000,50)),, width=6, height=4, device=cairo_pdf)
+data= read.csv('results/dis-freq-packetLoss.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)#
+#
+ggsave("graphs/pdfs/dist-freq-packetLoss-1.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
 suppressPackageStartupMessages (library(ggplot2))#
 suppressPackageStartupMessages (library(dplyr))#
 suppressPackageStartupMessages (library(tidyr))#
 #
 source ("graphs/graph-style.R")#
 #
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/data-retrieval-distance-rng',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-adjusted=data[0:2]#
-my_sum<-adjusted %>% group_by(distance) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))#
-g2 <- ggplot(my_sum, aes(x=distance)) +#
-     geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-     geom_errorbar(aes(ymin=Min, ymax=Max, group=distance), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-     theme_custom()#
-ggsave("graphs/pdfs/error-graph.pdf", plot=g2+scale_y_continuous(name="Data-retrieval time (s)", limits=c(0,1.5))+scale_x_continuous(name="Distance (m)", breaks=seq(100,1000,50)),, width=6, height=4, device=cairo_pdf)
+data= read.csv('results/dis-freq-packetLoss.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)#
+#
+ggsave("graphs/pdfs/dist-freq-packetLoss-2.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
 suppressPackageStartupMessages (library(ggplot2))#
 suppressPackageStartupMessages (library(dplyr))#
 suppressPackageStartupMessages (library(tidyr))#
 #
 source ("graphs/graph-style.R")#
 #
-levels=seq(1,5,1)#
-data=data.frame(distance=double(), timeTogetData=double())#
-for(i in levels) {#
-      t=read.csv(file=paste(sep='','results/fixedmultihopnodenumber-',i,'.csv'), header= TRUE, sep="," )#
-      data = rbind(t, data)#
-}#
-my_sum<-data %>% group_by(nodenumber) %>% summarise(mean=mean(timeTogetData),Min=min(timeTogetData),Max=max(timeTogetData))#
-g2 <- ggplot(my_sum, aes(x=nodenumber)) +#
-     geom_bar(stat="identity", aes(y=mean), position="dodge") +#
-     geom_errorbar(aes(ymin=Min, ymax=Max, group=nodenumber), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +#
-     theme_custom()#
-ggsave("graphs/pdfs/error-graph-nodenumber.pdf", plot=g2+scale_y_continuous(name="Data-retrieval time (s)", limits=c(0,0.75))+scale_x_continuous(name="Number of nodes", breaks=seq(10,100,10)),, width=6, height=4, device=cairo_pdf)
+data= read.csv('results/dis-freq-packetLoss-10-16.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)#
+#
+ggsave("graphs/pdfs/dist-freq-packetLoss-3.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+data= read.csv('results/dis-freq-packetLoss-10-16.csv')#
+adjusted = subset(data,frequency > 9)
+data= read.csv('results/dis-freq-packetLoss.csv')#
+adjusted = subset(data,frequency > 9)
+View(adjusted)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/dis-freq-packetLoss.csv')#
+adjusted = subset(data,frequency > 9)#
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)#
+#
+g2<-ggplot(adjusted,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)#
+#
+ggsave("graphs/pdfs/dist-freq-packetLoss-3.pdf", plot=g, width=12, height=8, device=cairo_pdf)#
+#
+ggsave("graphs/pdfs/dist-freq-packetLoss-10-16.pdf", plot=g2, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/TxPower-packetLoss.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=value)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(PscchTxPower ~ .)#
+ggsave("graphs/pdfs/TxPower-packetLoss.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/TxPower-packetLoss.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=value)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(TxPower ~ .)#
+ggsave("graphs/pdfs/TxPower-packetLoss.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/TxPower-packetLoss.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=value)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(TxPower ~ .)#
+ggsave("graphs/pdfs/TxPower-packetLoss.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/receieve-packetLoss.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=value)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)#
+ggsave("graphs/pdfs/receieve-packetLoss.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/receieve-packetLoss.csv')#
+#
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)#
+ggsave("graphs/pdfs/receieve-packetLoss.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/dis-freq-packetLoss.csv')
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)
+ggsave("graphs/pdfs/dist-freq-packetLoss-stop299.pdf", plot=g, width=12, height=8, device=cairo_pdf)
+#!/usr/bin/env Rscript#
+#
+suppressPackageStartupMessages (library(ggplot2))#
+suppressPackageStartupMessages (library(dplyr))#
+suppressPackageStartupMessages (library(tidyr))#
+#
+source ("graphs/graph-style.R")#
+#
+data= read.csv('results/dis-freq-packetLoss.csv')#
+adjusted = subset(data,frequency > 10)#
+g<-ggplot(data,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)#
+#
+g2<-ggplot(adjusted,aes(x=distance,y=percentage)) + geom_line(color="steelblue", size=1) + geom_point(color="steelblue") + facet_grid(frequency ~ .)
+ggsave("graphs/pdfs/dist-freq-packetLoss-stopadjusted.pdf", plot=g2, width=12, height=8, device=cairo_pdf)

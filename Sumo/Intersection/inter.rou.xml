@@ -1,0 +1,37 @@
+<routes>
+  <vType accel="5.0" decel="6.0" id="CarA" length="5.0" minGap="2.5" maxSpeed="50.0" sigma="0.5" />
+  <vType accel="3.0" decel="6.0" id="CarB" length="7.5" minGap="2.5" maxSpeed="50.0" sigma="0.5" />
+  <vType id="CarC" accel="3.0" length="5.0" minGap="2.5" maxSpeed="40.0" sigma="0.5" />
+  <vType accel="1.0" decel="5.0" id="CarD" length="7.5" minGap="2.5" maxSpeed="30.0" sigma="0.5" />
+  <route id="r01" edges="1i 4o"/>
+  <route id="r02" edges="2i 1o"/>
+  <route id="r03" edges="3i 4o"/>
+  <route id="r04" edges="4i 3o"/>
+  <!--<person id="person_0" depart="0">
+        <walk edges="1i 2o" speed="0.25"/>
+   </person>
+  <person id="person_1" depart="0">
+        <walk edges="2i 1o" speed="0.5"/>
+   </person>--> 
+<personFlow id="p1" begin="0" end="20" period="4" departPos="450">
+       <walk from="1i" to="2o" speed="0.2"/>
+  </personFlow>
+<personFlow id="p2" begin="0" end="20" period="4" departPos="480">
+       <walk from="2i" to="1o" speed="0.1"/>
+  </personFlow>
+<personFlow id="p3" begin="0" end="20" period="4" departPos="460">
+       <walk from="3i" to="4o" speed="0.25"/>
+  </personFlow>
+<personFlow id="p4" begin="0" end="20" period="4" departPos="475">
+       <walk from="4i" to="3o" speed="0.25"/>
+  </personFlow>
+<!--<vehicle depart="0" id="v01" route="r01" departSpeed="15" type="CarC"/>
+<vehicle depart="0" id="v02" route="r02" departSpeed="12" type="CarC"/>
+<vehicle depart="0" id="v03" route="r03" departSpeed= "18" type="CarC"/>
+<vehicle depart="0" id="v04" route="r04" departSpeed="20" type="CarC"/>-->
+<flow id="f1" from="1i" to="4o" begin="0" end="50" number="10" departSpeed="5"/>
+<flow id="f2" from="1i" to="2o" begin="0" end="50" number="5" departSpeed="7"/>
+<flow id="f3" from="2i" to="1o" begin="0" end="50" number="10" departSpeed="7"/>
+<flow id="f4" from="3i" to="4o" begin="0" end="50" number="8" departSpeed="10"/>
+<flow id="f5" from="4i" to="3o" begin="0" end="50" number="7" departSpeed="10"/>
+</routes>
