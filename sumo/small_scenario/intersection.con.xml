@@ -1,0 +1,19 @@
+<connections >
+ <connection from="1i" to="4o" fromLane="3" toLane="3"/>
+ <connection from="1i" to="4o" fromLane="3" toLane="2"/>
+ <connection from="1i" to="2o" fromLane="2" toLane="2"/>
+ <connection from="1i" to="2o" fromLane="1" toLane="1"/>
+ <connection from="2i" to="3o" fromLane="3" toLane="3"/>
+ <connection from="2i" to="1o" fromLane="2" toLane="2"/>
+ <connection from="2i" to="1o" fromLane="1" toLane="1"/>
+ <connection from="3i" to="1o" fromLane="3" toLane="3"/>
+ <connection from="3i" to="4o" fromLane="2" toLane="2"/>
+ <connection from="3i" to="4o" fromLane="1" toLane="1"/>
+ <connection from="4i" to="2o" fromLane="3" toLane="3"/>
+ <connection from="4i" to="3o" fromLane="2" toLane="2"/>
+ <connection from="4i" to="3o" fromLane="1" toLane="1"/>
+<crossing node="0" edges="3i 3o" priority="true"/> 
+<crossing node="0" edges="1i 1o" priority="true"/>
+<crossing node="0" edges="2i 2o" priority="true"/>
+<crossing node="0" edges="4i 4o" priority="true"/>
+</connections>

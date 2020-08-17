@@ -8,9 +8,9 @@ The code should also work with the latest version of ndnSIM, but it is not guara
     mkdir ndnSIM
     cd ndnSIM
 
-    git clone -b ndnSIM-2.5 https://github.com/named-data-ndnSIM/ns-3-dev.git ns-3
-    git clone -b 0.18.0 https://github.com/named-data-ndnSIM/pybindgen.git pybindgen
-    git clone -b ndnSIM-2.5 --recursive https://github.com/named-data-ndnSIM/ndnSIM ns-3/src/ndnSIM
+    git clone -b <TOFIX> https://github.com/named-data-ndnSIM/ns-3-dev.git ns-3
+    git clone -b <TOFIX> https://github.com/named-data-ndnSIM/pybindgen.git pybindgen
+    git clone -b <TOFIX> --recursive https://github.com/<TOFIX> ns-3/src/ndnSIM
 
     # Build and install NS-3 and ndnSIM
     cd ns-3
@@ -106,7 +106,13 @@ or
 Available simulations
 =====================
 
-<Scenario Name>
----------------
+count_speed_adjustment.py: Finding numbers of adjusted, collided, passed Cars 
+-----------------------------------------------------------------------------
 
-Description
+To find the number of adjusted, collided, passed car with some other computed numbers (e.g, ``adjusted_and_not_collided``).
+
+    python3 src/ndnSIM/scenarios/count_speed_adjustment.py --duration=180
+
+Outputs:
+
+- ``results/numbers.csv`` with progressive numbers for each 10 seconds of the run

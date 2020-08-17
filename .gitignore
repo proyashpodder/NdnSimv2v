@@ -6,3 +6,7 @@
 .lock*
 build/
 *.pyc
+.Rhistory
+*.RData
+*.Rapp.history
+*.tr

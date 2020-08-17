@@ -29,18 +29,18 @@ parser.add_argument('-g', '--no-graph', dest="graph", action='store_false', defa
 args = parser.parse_args()
 
 if not args.list and len(args.scenarios)==0:
-    print "ERROR: at least one scenario need to be specified"
+    print("ERROR: at least one scenario need to be specified")
     parser.print_help()
     exit (1)
 
 if args.list:
-    print "Available scenarios: "
+    print("Available scenarios: ")
 else:
     if args.simulate:
-        print "Simulating the following scenarios: " + ",".join (args.scenarios)
+        print("Simulating the following scenarios: " + ",".join (args.scenarios))
 
     if args.graph:
-        print "Building graphs for the following scenarios: " + ",".join (args.scenarios)
+        print("Building graphs for the following scenarios: " + ",".join (args.scenarios))
 
 ######################################################################
 ######################################################################
@@ -51,15 +51,15 @@ class SimulationJob (workerpool.Job):
     def __init__ (self, cmdline):
         self.cmdline = cmdline
     def run (self):
-        print (" ".join (self.cmdline))
-        subprocess.call (self.cmdline)
+        print(" ".join (self.cmdline))
+        subprocess.call(self.cmdline)
 
 pool = workerpool.WorkerPool(size = multiprocessing.cpu_count())
 
 class Processor:
     def run (self):
         if args.list:
-            print "    " + self.name
+            print("    " + self.name)
             return
 
         if "all" not in args.scenarios and self.name not in args.scenarios:
@@ -84,17 +84,21 @@ class Scenario (Processor):
         # other initialization, if any
 
     def simulate (self):
-        cmdline = ["./build/SCENARIO_TO_RUN"]
+        cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=180", "--baseline=1", "--output=1-1-collisions-baseline"]
         job = SimulationJob (cmdline)
         pool.put (job)
 
+        cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=180", "--baseline=0", "--output=1-2-collisions"]
+        job = SimulationJob (cmdline)
+        pool.put (job)
+        
     def postprocess (self):
         # any postprocessing, if any
         pass
 
 try:
     # Simulation, processing, and graph building
-    fig = Scenario (name="NAME_TO_CONFIGURE")
+    fig = Scenario (name="collision-prevention")
     fig.run ()
 
 finally:
