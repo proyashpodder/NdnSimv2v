@@ -20,6 +20,7 @@ cmd.tmin = 0.02
 cmd.tmax = 0.2
 cmd.vis = False
 cmd.numberOfInterest = 3
+cmd.run = 1
 
 cmd.AddValue("traceFile", "Name of the Trace File")
 cmd.AddValue("duration", "Total simulation time")
@@ -29,6 +30,7 @@ cmd.AddValue("tmax", "maximum time")
 cmd.AddValue("sumo_granularity", "Granularity of SUMO")
 cmd.AddValue("vis", "enable visualizer")
 cmd.AddValue("numberOfInterest", "How many Interest will be sent in different targets")
+cmd.AddValue("run", "run")
 
 cmd.baseline = False
 cmd.AddValue("baseline", "If it is a baseline run")
@@ -36,6 +38,10 @@ cmd.output = ""
 cmd.AddValue("output", "")
 
 cmd.Parse(sys.argv)
+
+if cmd.run:
+    cmd.run = int(cmd.run)
+    GlobalValue.Bind("RngRun", StringValue("%s" % cmd.run))
 
 if cmd.vis:
     GlobalValue.Bind("SimulatorImplementationType", StringValue("ns3::VisualSimulatorImpl"))

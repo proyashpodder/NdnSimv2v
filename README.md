@@ -109,10 +109,21 @@ Available simulations
 count_speed_adjustment.py: Finding numbers of adjusted, collided, passed Cars 
 -----------------------------------------------------------------------------
 
-To find the number of adjusted, collided, passed car with some other computed numbers (e.g, ``adjusted_and_not_collided``).
+To find the number of adjusted, collided, passed car with some other computed numbers (e.g, `adjusted_and_not_collided`).
 
-    python3 src/ndnSIM/scenarios/count_speed_adjustment.py --duration=180
+    ./run.py collision-prevention -sg
 
 Outputs:
 
-- ``results/numbers.csv`` with progressive numbers for each 10 seconds of the run
+- `1-1-collisions-baseline-risky-decelerations-run-1.csv`
+- `1-1-collisions-baseline-run-1.csv`
+- `1-2-collisions-risky-decelerations-run-1.csv`
+- `1-2-collisions-risky-decelerations-run-2.csv`
+- `1-2-collisions-risky-decelerations-run-3.csv`
+- `1-2-collisions-risky-decelerations-run-4.csv`
+- ...
+- `1-2-collisions-run-1.csv`
+- `1-2-collisions-run-2.csv`
+- `1-2-collisions-run-3.csv`
+- `1-2-collisions-run-4.csv`
+- ...

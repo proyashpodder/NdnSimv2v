@@ -31,12 +31,12 @@ from ns.mobility import MobilityModel, ConstantVelocityMobilityModel
 if not cmd.output:
     cmd.output = 'numbers-%d' % cmd.baseline
 
-data_file = open('results/%s.csv' % cmd.output, 'w')
+data_file = open('results/%s-run-%d.csv' % (cmd.output, cmd.run), 'w')
 
 csv_writer = csv.writer(data_file)
 csv_writer.writerow(["Duration","Total_Number_Of_Vehicle","Total_Adjusted_Car","Total_Collided_Car","Total_Passed_Car","Total_AdjustedNot_CollidedCar","totalCollidedNotAdjustedCar","totalAdjustedButCollidedCar","totalAdjustedAndPassedCar"])
 
-file = open('results/%s-risky-decelerations.csv' % cmd.output, 'w')
+file = open('results/%s-risky-decelerations-run-%d.csv' % (cmd.output, cmd.run), 'w')
 csv_writer1 = csv.writer(file)
 csv_writer1.writerow(["Duration","Total_Number_Of_Vehicle","Total_Risky_Deceleration_Count","Total_Number_Of_Risky_Decelerated_Car"])
 
