@@ -105,13 +105,15 @@ class RandomDecel (Processor):
         # other initialization, if any
 
     def simulate (self):
-        cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=10", "--baseline=1", "--output=1-1-collisions-baseline", "--run=%d" % 1]
+        cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=180", "--baseline=1", "--output=1-1-collisions-baseline", "--run=%d" % 1]
         job = SimulationJob (cmdline)
         pool.put (job)
 
-        for run in range(1, 2):
+        for run in range(1, 5):
             for minDecel in numpy.arange(0.5,2.6,0.5):
                 for maxDecel in numpy.arange(1.5,3.6,0.5):
+                    if(minDecel > maxDecel):
+                        continue
                     cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=180", "--baseline=0", "--output=1-2-collisions", "--run={}".format(run), "--minDecel={}".format(minDecel), "--maxDecel={}".format(maxDecel)]
                     job = SimulationJob (cmdline)
                     pool.put (job)
