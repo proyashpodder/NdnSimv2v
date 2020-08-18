@@ -22,8 +22,8 @@ g_interestSendingDelay.SetAttribute("Min", DoubleValue(0.0))
 g_interestSendingDelay.SetAttribute("Max", DoubleValue(0.5))
 
 g_speedAdjustmentVelocity = UniformRandomVariable()
-g_speedAdjustmentVelocity.SetAttribute("Min", DoubleValue(1.5))
-g_speedAdjustmentVelocity.SetAttribute("Max", DoubleValue(3.0))
+g_speedAdjustmentVelocity.SetAttribute("Min", DoubleValue(float(cmd.minDecel)))
+g_speedAdjustmentVelocity.SetAttribute("Max", DoubleValue(float(cmd.maxDecel)))
 
 
 from ns.mobility import MobilityModel, ConstantVelocityMobilityModel
@@ -31,7 +31,7 @@ from ns.mobility import MobilityModel, ConstantVelocityMobilityModel
 if not cmd.output:
     cmd.output = 'numbers-%d' % int(cmd.baseline)
 
-data_file = open('results/%s-run-%d.csv' % (cmd.output, cmd.run), 'w')
+data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
 csv_writer = csv.writer(data_file)
 csv_writer.writerow(["Duration","Total_Number_Of_Vehicle","Total_Adjusted_Car","Total_Collided_Car","Total_Passed_Car","Total_AdjustedNot_CollidedCar","totalCollidedNotAdjustedCar","totalAdjustedButCollidedCar","totalAdjustedAndPassedCar"])

@@ -21,6 +21,8 @@ cmd.tmax = 0.2
 cmd.vis = False
 cmd.numberOfInterest = 3
 cmd.Rng = 1
+cmd.minDecel = 1.5
+cmd.maxDecel = 3
 
 cmd.AddValue("traceFile", "Name of the Trace File")
 cmd.AddValue("duration", "Total simulation time")
@@ -31,6 +33,8 @@ cmd.AddValue("sumo_granularity", "Granularity of SUMO")
 cmd.AddValue("vis", "enable visualizer")
 cmd.AddValue("numberOfInterest", "How many Interest will be sent in different targets")
 cmd.AddValue("run", "run")
+cmd.AddValue("minDecel", "minimum decceleration for randomness range")
+cmd.AddValue("maxDecel", "maximum decceleration for randomness range")
 
 cmd.baseline = False
 cmd.AddValue("baseline", "If it is a baseline run")
