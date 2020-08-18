@@ -29,7 +29,7 @@ g_speedAdjustmentVelocity.SetAttribute("Max", DoubleValue(3.0))
 from ns.mobility import MobilityModel, ConstantVelocityMobilityModel
 
 if not cmd.output:
-    cmd.output = 'numbers-%d' % cmd.baseline
+    cmd.output = 'numbers-%d' % int(cmd.baseline)
 
 data_file = open('results/%s-run-%d.csv' % (cmd.output, cmd.run), 'w')
 
@@ -110,12 +110,12 @@ def setSpeedToReachNextWaypoint(node, referencePos, targetPos, targetTime, refer
 
     x = targetPos.x + estimatedSpeed.x
     y = targetPos.y + estimatedSpeed.y
-    if(x<=0 or x>=1000 or y<=0 or y>=1000):
-        node.mobility.SetPosition(posOutOfBound)
-        node.mobility.SetVelocity(Vector(0, 0, 0))
+    #if(x<=0 or x>=1000 or y<=0 or y>=1000):
+        #node.mobility.SetPosition(posOutOfBound)
+        #node.mobility.SetVelocity(Vector(0, 0, 0))
     # print("Node [%s] change speed to [%s] (now = %f seconds); reference speed %f, current position: %s, target position: %s" % (node.name, str(estimatedSpeed), Simulator.Now().To(Time.S).GetDouble(), referenceSpeed, str(prevPos), str(targetPos)))
-    else:
-        node.mobility.SetVelocity(estimatedSpeed)
+    #else:
+    node.mobility.SetVelocity(estimatedSpeed)
 
 def prepositionNode(node, targetPos, currentSpeed, angle, targetTime):
     '''This one is trying to set initial position of the node in such a way so it will be

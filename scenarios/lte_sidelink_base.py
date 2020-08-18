@@ -20,7 +20,7 @@ cmd.tmin = 0.02
 cmd.tmax = 0.2
 cmd.vis = False
 cmd.numberOfInterest = 3
-cmd.run = 1
+cmd.Rng = 1
 
 cmd.AddValue("traceFile", "Name of the Trace File")
 cmd.AddValue("duration", "Total simulation time")
