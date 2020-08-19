@@ -20,7 +20,7 @@ cmd.tmin = 0.02
 cmd.tmax = 0.2
 cmd.vis = False
 cmd.numberOfInterest = 3
-cmd.Rng = 1
+cmd.run = 1
 cmd.minDecel = 1.5
 cmd.maxDecel = 3
 
