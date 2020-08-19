@@ -19,23 +19,46 @@ for (m in minList) {
     }
 }
 
+levels = c(
+    "0.5-2 m (range 1.5 m)",
+    "1-2.5 m (range 1.5 m)",
+    "1.5-3 m (range 1.5 m)",
+
+    "0.5-2.5 m (range 2 m)",
+    "1-3 m (range 2 m)",
+    "1.5-3.5 m (range 2 m)",
+
+    "0.5-3 m (range 2.5 m)",
+    "1-3.5 m (range 2.5 m)",
+    "1.5-4 m (range 2.5 m)",
+
+    "0.5-3.5 m (range 3 m)",
+    "1-4 m (range 3 m)",
+    "1.5-4.5 m (range 3 m)",
+
+    "0.5-4 m (range 3.5 m)",
+    "1-4.5 m (range 3.5 m)",
+    "1.5-5 m (range 3.5 m)"
+)
+
+
 base = read.csv(file="results/1-baseline-run-1-min-1.500000-max-3.000000.csv", header=TRUE)
 data = c()
 for (r in 1:nrow(ranges)) {
-    for (run in 1:11) {
+    for (run in 1:10) {
         tryCatch({
             mi = ranges[r, "min"]
             ma = ranges[r, "max"]
-        d = read.csv(file=paste(sep='', "results/2-collisions-run-", run ,"-min-", format(mi, nsmall=6),"-max-", format(ma, nsmall=6),".csv"), header=TRUE)
-        d$Run = run
-        d$MinAdjustment = factor(mi)
-        d$MaxAdjustment = factor(ma)
-        d
-        if (length(data) == 0) {
-            data = d
-        } else {
-            data = rbind(d, data)
-        }
+
+            f = file=paste(sep='', "results/2-collisions-run-", run ,"-min-", format(mi, nsmall=6),"-max-", format(ma, nsmall=6),".csv")
+            d = read.csv(f, header=TRUE)
+            d$Run = run
+            d$Adjustment = factor(paste(sep='', mi, '-', ma, ' m (range ', ma-mi, ' m)'), levels=levels, ordered=TRUE)
+            if (length(data) == 0) {
+                data = d
+            } else {
+                data = rbind(d, data)
+            }
         }, warning = function(w) {
             print(w)
         }, error = function(e) {
@@ -53,44 +76,27 @@ for (i in 1:length(colsOrig)) {
 }
 
 dataLong = melt(data,
-                id.vars = c("Duration", "Run", "MinAdjustment", "MaxAdjustment"),
+                id.vars = c("Duration", "Run", "Adjustment"),
                 measure.vars = cols,
                 variable.name = "Type")
 
 
-s = summarySE(dataLong, measurevar=c("value"), groupvars=c("Duration", "MinAdjustment","MaxAdjustment", "Type"))
+s = summarySE(dataLong, measurevar=c("value"), groupvars=c("Duration", "Adjustment", "Type"))
 
 s1 = subset(s, Duration==300)
 
+g  <- ggplot(subset(s1, Type=="Cars that collided" | Type=="Cars that adjusted yet still collided" | Type=="Cars that adjusted"), aes(x=Adjustment, y=value, fill=Type)) +
+    theme_custom() +
+    geom_bar(stat="identity", position="dodge", color="black") +
+    geom_errorbar(aes(ymin=value-se, ymax=value+se), size=.3, width=.2, position=position_dodge(.9)) +
+    ylab("Number of cars") +
+    xlab("Range for random preventive adjustment") +
+    theme(axis.text.x = element_text(family = "serif", size = 7, lineheight = 0.8, vjust = 0.4, angle=60)) +
+    annotate(geom="segment", x=0, xend=16, y=max(base$Total_Collided_Car),yend=max(base$Total_Collided_Car)) +
+    annotate(geom="text", hjust = 1, vjust=-0.2, x=15, y=max(base$Total_Collided_Car), label="Baseline Number of Accidents")
 
-## g <- ggplot(s, aes(x=X, y=Y)) +
-##     theme_custom() +
-##     geom_point(aes(colour=Action, size=Action)) +
-##     scale_size_manual(values=c(4,1)) +
-##     facet_grid(Name ~ .)
 
-## adjusted = subset(data, Action != "Duplicate" & Action != "Suppressed")
-## ## levels(adjusted$Action) = c("Broadcast", "Received", "Received", "Suppressed")
-
-## ## p.Wages.all.A_MEAN <- Wages.all %>%
-## ##                   group_by(`Career Cluster`, Year)%>%
-## ##                   summarize(ANNUAL.MEAN.WAGE = mean(A_MEAN))
-## counts = adjusted %>% group_by(Action, Name, TotalNodes) %>% tally()
-
-## countsWithErrors = counts %>% group_by(Action, TotalNodes) %>% summarize(Mean=mean(n), Min=min(n), Max=max(n))
-
-##     ## summarize(Time=count(Time))
-
-## g2 <- ggplot(countsWithErrors, aes(x=TotalNodes)) +
-##     geom_bar(stat="identity", aes(y=Mean, colour=Action, fill=Action), position="dodge") +
-##     geom_errorbar(aes(ymin=Min, ymax=Max, group=Action), size=I(0.3), width=I(0.4), position=position_dodge(width=1)) +
-##     theme_custom()
-
-## ## g <- ggplot(data, aes(x=Time)) +
-## ##     xlab("Time, s") +
-## ##     ylab("Delay, milliseconds") +
-## ##     geom_point(aes(y=Delay, colour=Distance)) +
-## ##     theme_custom()
+ggsave("graphs/pdfs/collision-vs-ranges.pdf", plot=g, width=9, height=5, device=cairo_pdf)
 
 
 ## ggsave("graphs/pdfs/map.pdf", plot=g, width=12, height=8, device=cairo_pdf)
