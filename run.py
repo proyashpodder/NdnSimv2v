@@ -8,7 +8,6 @@ import subprocess
 import workerpool
 import multiprocessing
 import argparse
-import numpy
 
 ######################################################################
 ######################################################################
@@ -79,56 +78,47 @@ class Processor:
     def graph (self):
         subprocess.call ("./graphs/%s.R" % self.name, shell=True)
 
-class Scenario (Processor):
+class Baseline(Processor):
     def __init__ (self, name):
         self.name = name
         # other initialization, if any
 
     def simulate (self):
-        cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=180", "--baseline=1", "--output=1-1-collisions-baseline", "--run=%d" % 1]
+        cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=320", "--baseline=1", "--output=1-baseline", "--run=%d" % 1]
         job = SimulationJob (cmdline)
         pool.put (job)
 
-        for run in range(1, 5):
-            cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=180", "--baseline=0", "--output=1-2-collisions", "--run=%d" % run]
-            job = SimulationJob (cmdline)
-            pool.put (job)
-        
     def postprocess (self):
         # any postprocessing, if any
         pass
 
+    def graph (self):
+        pass
 
-class RandomDecel (Processor):
+class Adjustment(Processor):
     def __init__ (self, name):
         self.name = name
         # other initialization, if any
 
     def simulate (self):
-        cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=180", "--baseline=1", "--output=1-1-collisions-baseline", "--run=%d" % 1]
-        job = SimulationJob (cmdline)
-        pool.put (job)
-
-        for run in range(1, 5):
-            for minDecel in numpy.arange(0.5,2.6,0.5):
-                for maxDecel in numpy.arange(1.5,3.6,0.5):
-                    if(minDecel > maxDecel):
-                        continue
-                    cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=180", "--baseline=0", "--output=1-2-collisions", "--run={}".format(run), "--minDecel={}".format(minDecel), "--maxDecel={}".format(maxDecel)]
+        for minDecel in [1.5, 0.5, 1]:
+            for decelRange in [1.5, 2, 2.5, 3, 3.5]:
+                maxDecel = minDecel + decelRange
+                for run in range(1, 11):
+                    cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=320", "--baseline=0", "--output=2-collisions", "--run={}".format(run), "--minDecel={}".format(minDecel), "--maxDecel={}".format(maxDecel)]
                     job = SimulationJob (cmdline)
-                    pool.put (job)
+                    pool.put(job)
             
     def postprocess (self):
         # any postprocessing, if any
         pass
 
-
 try:
     # Simulation, processing, and graph building
-    fig = Scenario (name="collision-prevention")
+    fig = Baseline(name="baseline")
     fig.run ()
     
-    fig = RandomDecel(name="random-deceleration")
+    fig = Adjustment(name="var-deceleration")
     fig.run()
 
 finally:

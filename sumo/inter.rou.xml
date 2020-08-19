@@ -1,6 +1,6 @@
 <routes>
   <vType accel="5.0" decel="6.0" id="CarA" length="5.0" minGap="0" maxSpeed="20.0" sigma="0.5"  jmIgnoreFoeProb="1" jmIgnoreFoeSpeed="100" jmIgnoreKeepClearTime="2" jmCrossingGap="0" jmDriveAfterRedTime="100" jmDriveAfterYellowTime="100" />
-  <vType accel="3.0" decel="6.0" id="CarB" length="5.0" minGap="2.5" maxSpeed="20.0" sigma="0.5" jmIgnoreFoeProb="1" jmIgnoreFoeSpeed="100"/>
+  <vType accel="3.0" decel="6.0" id="CarB" length="7.5" minGap="2.5" maxSpeed="20.0" sigma="0.5" jmIgnoreFoeProb="1" jmIgnoreFoeSpeed="100"/>
   <vType id="CarC" accel="3.0" length="5.0" minGap="2.5" maxSpeed="40.0" sigma="0.5" />
   <vType accel="1.0" decel="5.0" id="CarD" length="7.5" minGap="2.5" maxSpeed="30.0" sigma="0.5" />
   <route id="r01" edges="1i 4o"/>
@@ -30,12 +30,12 @@
 <vehicle depart="0" id="v02" route="r02" departSpeed="12" type="CarC"/>
 <vehicle depart="0" id="v03" route="r03" departSpeed= "18" type="CarC"/>
 <vehicle depart="0" id="v04" route="r04" departSpeed="20" type="CarC"/>-->
-<flow id="f1" type="CarB" from="1i" to="4o" begin="0" end="2000" number="50" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
-<flow id="f2" type="CarB" from="1i" to="2o" begin="0" end="2000" number="100" departSpeed="random" maxSpeed="18.0" departLane="2" accel="3.0"/>
-<flow id="f3" type="CarB" from="2i" to="3o" begin="0" end="2000" number="50" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
-<flow id="f4" type="CarB" from="2i" to="1o" begin="0" end="2000" number="100" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
-<flow id="f5" type="CarB" from="3i" to="1o" begin="0" end="2000" number="50" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
-<flow id="f6" type="CarB" from="3i" to="4o" begin="0" end="2000" number="100" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
-<flow id="f7" type="CarB" from="4i" to="2o" begin="0" end="2000" number="50" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
-<flow id="f8" type="CarB" from="4i" to="3o" begin="0" end="2000" number="100" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
+<flow id="f1" type="CarB" from="1i" to="4o" begin="0" end="200" number="5" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
+<flow id="f2" type="CarB" from="1i" to="2o" begin="0" end="200" number="10" departSpeed="random" maxSpeed="18.0" departLane="2" accel="3.0"/>
+<flow id="f3" type="CarB" from="2i" to="3o" begin="0" end="200" number="5" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
+<flow id="f4" type="CarB" from="2i" to="1o" begin="0" end="200" number="10" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
+<flow id="f5" type="CarB" from="3i" to="1o" begin="0" end="200" number="5" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
+<flow id="f6" type="CarB" from="3i" to="4o" begin="0" end="200" number="10" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
+<flow id="f7" type="CarB" from="4i" to="2o" begin="0" end="200" number="5" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
+<flow id="f8" type="CarB" from="4i" to="3o" begin="0" end="200" number="10" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
 </routes>
