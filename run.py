@@ -108,7 +108,23 @@ class Adjustment(Processor):
                     cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=320", "--baseline=0", "--output=2-collisions", "--run={}".format(run), "--minDecel={}".format(minDecel), "--maxDecel={}".format(maxDecel)]
                     job = SimulationJob (cmdline)
                     pool.put(job)
-            
+
+    def postprocess (self):
+        # any postprocessing, if any
+        pass
+
+class Communications(Processor):
+    def __init__ (self, name):
+        self.name = name
+        # other initialization, if any
+
+    def simulate (self):
+        for minDecel, maxDecel in [[1.5, 3], [1, 3]]:
+            for run in range(1, 11):
+                cmdline = ["python3", "./scenarios/count_speed_adjustment.py", "--duration=320", "--baseline=0", "--output=3-rates", "--run={}".format(run), "--minDecel={}".format(minDecel), "--maxDecel={}".format(maxDecel)]
+                job = SimulationJob (cmdline)
+                pool.put(job)
+
     def postprocess (self):
         # any postprocessing, if any
         pass
@@ -116,12 +132,14 @@ class Adjustment(Processor):
 try:
     # Simulation, processing, and graph building
     fig = Baseline(name="baseline")
-    fig.run ()
-    
+    fig.run()
+
     fig = Adjustment(name="var-deceleration")
     fig.run()
 
-finally:
-    pool.join ()
-    pool.shutdown ()
+    fig = Communications(name="communications")
+    fig.run()
 
+finally:
+    pool.join()
+    pool.shutdown()

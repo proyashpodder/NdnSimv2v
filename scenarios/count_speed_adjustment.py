@@ -33,6 +33,9 @@ if not cmd.output:
 
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
+rates_file = 'results/%s-rates-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
+app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
+
 csv_writer = csv.writer(data_file)
 csv_writer.writerow(["Duration","Total_Number_Of_Vehicle","Total_Adjusted_Car","Total_Collided_Car","Total_Passed_Car","Total_AdjustedNot_CollidedCar","totalCollidedNotAdjustedCar","totalAdjustedButCollidedCar","totalAdjustedAndPassedCar"])
 
@@ -433,6 +436,11 @@ Simulator.Schedule(Seconds(1), passingVehicle)
 Simulator.Schedule(Seconds(10.0), writeToFile)
 
 Simulator.Schedule(Seconds(10.0), risky_decelerations)
+
+ndn.L3RateTracer.InstallAll(rates_file, Seconds(10.0))
+ndn.AppDelayTracer.InstallAll(app_delays_file)
+
+Simulator.Schedule(cmd.duration - NanoSeconds(1), ndn.AppDelayTracer.Destroy)
 
 Simulator.Stop(cmd.duration)
 Simulator.Run()
