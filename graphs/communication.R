@@ -104,8 +104,27 @@ g <- ggplot(data.x2, aes(x=Time, y=Kilobits.sum, color=Type)) +
     geom_point(size=1) +
     geom_line(size=0.2) +
     geom_errorbar(aes(ymin=Kilobits.sum-se, ymax=Kilobits.sum+se), width=4, size=0.2, position=position_dodge(0.2)) +
-    ylab("Number of (interest/data) packets per second") +
+    ylab("Data rate for (interest/data) packets") +
     theme_custom() +
     facet_wrap(~ Adjustment)
 
-ggsave("graphs/pdfs/rates-1-kilobits.pdf", plot=g, width=9, height=5, device=cairo_pdf)
+ggsave("graphs/pdfs/rates-2-kilobits.pdf", plot=g, width=9, height=5, device=cairo_pdf)
+
+
+
+data.s3 = summarySE(data, measurevar=c("Kilobits"), groupvars=c("Node", "Adjustment", "Time", "Type"))
+data.s3 = subset(data.s3, Adjustment == "1.5-3 m (range 1.5 m)")
+data.x3 = subset(data.s3, Type == "OutInterests" | Type == "OutData")
+
+
+g <- ggplot(data.x3, aes(x=Time, y=Kilobits, color=Type)) +
+    geom_line(size=0.6) +
+    ylab("Data rate for (interest/data) packets") +
+    theme_custom() +
+    facet_wrap(~ Node)
+
+    ## geom_point(size=1) +
+
+ggsave("graphs/pdfs/rates-3-kilobits-per-node.pdf", plot=g, width=9, height=5, device=cairo_pdf)
+
+## geom_errorbar(aes(ymin=Kilobits.sum-se, ymax=Kilobits.sum+se), width=4, size=0.2, position=position_dodge(0.2)) +
