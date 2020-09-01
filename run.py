@@ -129,6 +129,22 @@ class Communications(Processor):
         # any postprocessing, if any
         pass
 
+class OneConsumer(Processor):
+    def __init__ (self, name):
+        self.name = name
+        # other initialization, if any
+
+    def simulate (self):
+        # for minDecel, maxDecel in [[1.5, 3], [1, 3]]:
+        #     for run in range(1, 11):
+        cmdline = ["python3", "./scenarios/one_consumer.py", "--duration=70"]
+        job = SimulationJob (cmdline)
+        pool.put(job)
+
+    def postprocess (self):
+        # any postprocessing, if any
+        pass
+    
 try:
     # Simulation, processing, and graph building
     fig = Baseline(name="baseline")
@@ -138,6 +154,9 @@ try:
     fig.run()
 
     fig = Communications(name="communications")
+    fig.run()
+
+    fig = OneConsumer(name="one-consumer")
     fig.run()
 
 finally:

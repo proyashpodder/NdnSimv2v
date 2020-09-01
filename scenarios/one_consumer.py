@@ -19,7 +19,10 @@ import csv
 
 from ns.mobility import MobilityModel, ConstantVelocityMobilityModel
 
-data_file = open('results/multiple_adjusted_speed_accel.csv', 'w')
+data_file = open('results/4-multiple_adjusted_speed_accel.csv', 'w')
+rates_file = 'results/4-rates.txt'
+app_delays_file = 'results/4-delays.txt'
+
 csv_writer = csv.writer(data_file)
 csv_writer.writerow(["Time","Speed","Acceleration", "X","Y"])
 
@@ -285,6 +288,11 @@ installAllProducerApp()
 Simulator.Schedule(Seconds(1), runSumoStep)
 
 Simulator.Schedule(Seconds(1), passingVehicle)
+
+ndn.L3RateTracer.InstallAll(rates_file, Seconds(1.0))
+ndn.AppDelayTracer.InstallAll(app_delays_file)
+
+Simulator.Schedule(cmd.duration - NanoSeconds(1), ndn.AppDelayTracer.Destroy)
 
 
 Simulator.Stop(cmd.duration)
