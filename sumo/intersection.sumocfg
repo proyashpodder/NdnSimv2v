@@ -12,7 +12,7 @@
     <collision.check-junctions value="true"/>
     <!--<collision.mingap-factor value="2.5"/>-->
     <collision.action value="teleport"/>
-    <collision.stoptime value="120"/>
+    <collision.stoptime value="2"/>
     <time-to-teleport value="120"/>
   </processing>
 
