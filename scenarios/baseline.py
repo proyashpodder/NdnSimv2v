@@ -47,6 +47,9 @@ file = open('results/%s-risky-decelerations-run-%d.csv' % (cmd.output, cmd.run),
 csv_writer1 = csv.writer(file)
 csv_writer1.writerow(["Duration","Total_Number_Of_Vehicle","Total_Risky_Deceleration_Count","Total_Number_Of_Risky_Decelerated_Car"])
 
+traffic_file = open('results/baseline-traffic-1.csv', 'w')
+writer = csv.writer(traffic_file)
+writer.writerow(["Time","PacketsRaw","KilobytesRaw"])
 
 net = sumolib.net.readNet('%s.net.xml' % cmd.traceFile)
 sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile]
@@ -75,7 +78,11 @@ totalCollisionCount = 0
 riskyDeceleration = 0
 numberOfLoadedVehicle = 0
 
+totalNumberOfPedestrian = 0
+totalTraffic = 0
+
 container = ns.network.NodeContainer()
+
 
 def createAllVehicles(simTime):
     g_traciDryRun.simulationStep(simTime)
@@ -83,10 +90,12 @@ def createAllVehicles(simTime):
     #vehicleList = g_traciDryRun.simulation.getLoadedIDList()
     persons = g_traciDryRun.person.getIDList()
     for person in persons:
-        print(person)
+        #print(person)
         node = addNode(person)
         #print(person)
         container.Add(node.node)
+        
+        # appss.Add(client.Install(node.node))
         p_names[person] = node
         node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
         node.mobility.SetPosition(posOutOfBound)
@@ -111,6 +120,18 @@ def createAllVehicles(simTime):
     print(len(vehicleList))
     
     port = 9   # Discard port(RFC 863)
+    
+    # one approach for sending UDP packets
+    appss = ns.network.ApplicationContainer()
+    client = ns.applications.UdpClientHelper(ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)))
+
+    client.SetAttribute("Interval",TimeValue(Seconds(1)))
+    client.SetAttribute("PacketSize",UintegerValue(350))
+    # client.Send()
+    appss.Add(client.Install(container))
+    appss.Start(Seconds(1.0))
+    
+    # another approach of sending UDP packets
     onOff = ns.applications.OnOffHelper("ns3::UdpSocketFactory",
                                   ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)))
     # onOff.SetAttribute("DataRate", ns.network.DataRateValue(ns.network.DataRate("100kbps")))
@@ -118,6 +139,11 @@ def createAllVehicles(simTime):
     apps = onOff.Install(container)
     apps.Start(ns.core.Seconds(1))
     apps.Stop(ns.core.Seconds(cmd.duration - Seconds(1)))
+    
+    tr = ns.applications.UdpTraceClientHelper(ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)),"")
+    aps = ns.network.ApplicationContainer()
+    aps.Add(tr.Install(container))
+    aps.Start(Seconds(1.0))
     
     g_traciDryRun.close()
 
@@ -168,20 +194,31 @@ def prepositionNode(node, targetPos, currentSpeed, angle, targetTime):
 
 def runSumoStep():
     Simulator.Schedule(Seconds(time_step), runSumoStep)
-    global totalCollisionCount, collidedPreviousSecond, riskyDeceleration, adjusted, collided, passed, numberOfLoadedVehicle
+    global totalCollisionCount, collidedPreviousSecond, riskyDeceleration, adjusted, collided, passed, numberOfLoadedVehicle, numberOfPedestrian, totalTraffic, totalNumberOfPedestrian
     nowTime = Simulator.Now().To(Time.S).GetDouble()
     targetTime = Simulator.Now().To(Time.S).GetDouble() + time_step
 
     collisionCount = 0
+    
+
 
     print ("Now", Simulator.Now().To(Time.S).GetDouble())
     g_traciStepByStep.simulationStep(Simulator.Now().To(Time.S).GetDouble() + time_step)
-
+    
+    if(nowTime % 10 == 0):
+        totalTraffic = 0
+        totalNumberOfPedestrian = 0
     numberOfVehicle = g_traciStepByStep.simulation.getLoadedNumber()
-
     numberOfLoadedVehicle = numberOfLoadedVehicle + numberOfVehicle
-
-    # print(numberOfLoadedVehicle)
+    
+    numberOfPedestrian = len(g_traciStepByStep.person.getIDList())
+    print(numberOfPedestrian)
+    print(g_traciStepByStep.person.getIDList())
+    totalNumberOfPedestrian = totalNumberOfPedestrian + numberOfPedestrian
+    traffic = numberOfPedestrian * 350
+    totalTraffic = totalTraffic + traffic
+    print(totalNumberOfPedestrian)
+    print(totalTraffic)
 
     requireAdjustment = BooleanValue()
     noAdjustment = BooleanValue(False)
@@ -244,6 +281,10 @@ def installAllProducerApp():
         proapps.Start(Seconds(0.5))
         producerNode.proapps = proapps.Get(0)
 
+def trafficCount():
+    writer.writerow([Simulator.Now().To(Time.S).GetDouble(),totalNumberOfPedestrian, totalTraffic/1000])
+    #totalTraffic = 0
+    Simulator.Schedule(Seconds(10.0), trafficCount)
 
 createAllVehicles(cmd.duration.To(Time.S).GetDouble())
 
@@ -260,7 +301,7 @@ ndn.L3RateTracer.InstallAll(rates_file, Seconds(10.0))
 ndn.AppDelayTracer.InstallAll(app_delays_file)
 
 Simulator.Schedule(cmd.duration - NanoSeconds(1), ndn.AppDelayTracer.Destroy)
-
+Simulator.Schedule(Seconds(10.0), trafficCount)
 Simulator.Stop(cmd.duration)
 Simulator.Run()
 

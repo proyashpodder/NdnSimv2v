@@ -3,6 +3,7 @@
   <vType accel="3.0" decel="6.0" id="CarB" length="4.5" minGap="2.5" maxSpeed="20.0" sigma="0.5"/>
   <vType id="CarC" accel="3.0" length="5.0" minGap="2.5" maxSpeed="40.0" sigma="0.5" />
   <vType accel="1.0" decel="5.0" id="CarD" length="7.5" minGap="2.5" maxSpeed="30.0" sigma="0.5" />
+  <vType id="p0" vClass="pedestrian" width="0.70" length="0.90" minGap="1" color="255,255,0" />
   <route id="r01" edges="1i 4o"/>
   <route id="r02" edges="2i 1o"/>
   <route id="r03" edges="3i 4o"/>
@@ -14,16 +15,16 @@
   <person id="person_1" depart="0">
         <walk edges="2i 1o" speed="0.5"/>
    </person>--> 
-<personFlow id="p1" begin="0" end="200" number="10" departPos="475">
+<personFlow id="p1" type="p0" begin="0" end="200" number="50" departPos="random">
        <walk from="1i" to="2o" speed="1.2"/>
   </personFlow>
-<personFlow id="p2" begin="0" end="200" number="10" departPos="485">
+<personFlow id="p2" type="p0" begin="0" end="200" number="50" departPos="random">
        <walk from="2i" to="1o" speed="1.1"/>
   </personFlow>
-<personFlow id="p3" begin="0" end="200" number="10" departPos="480">
+<personFlow id="p3" type="p0" begin="0" end="200" number="50" departPos="random">
        <walk from="3i" to="4o" speed="1.25"/>
   </personFlow>
-<personFlow id="p4" begin="0" end="200" number="10" departPos="470">
+<personFlow id="p4" type="p0" begin="0" end="200" number="50" departPos="random">
        <walk from="4i" to="3o" speed="1.5"/>
   </personFlow>
 <!--<vehicle depart="0" id="v01" route="r01" departSpeed="15" type="CarC"/>

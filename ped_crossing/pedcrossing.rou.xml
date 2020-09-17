@@ -1,0 +1,11 @@
+<routes>
+    <vType id="p0" vClass="pedestrian" width="0.70" length="3.00" minGap="1" guiShape="pedestrian" color="255,0,0" jmDriveAfterRedTime="250"/>
+    <flow id="EW" begin="0" end="3600" probability="0.1" from="EC" to="CW"/>
+    <flow id="WE" begin="0" end="3600" probability="0.1" from="WC" to="CE" jmCrossingGap="-1000"/>
+    <personFlow id="p1" type="p0" begin="0" end="200" number="20">
+        <walk from="NC" to="CS" speed="1.25"/>
+        </personFlow>
+    <personFlow id="p2" type="p0" begin="0" end="200" number="20">
+        <walk from="CS" to="NC" speed="1.25"/>
+        </personFlow>
+</routes>

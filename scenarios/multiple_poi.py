@@ -33,7 +33,7 @@ if not cmd.output:
 
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
-rates_file = 'results/%s-%s-rates-run-%d.csv' % (cmd.poi,cmd.output, cmd.run)
+rates_file = 'results/2-%s-rates-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)
@@ -152,53 +152,21 @@ def prepositionNode(node, targetPos, currentSpeed, angle, targetTime):
 def getTargets(vehicle):
     pos = []
 
-    if (cmd.poi == "multiple"):
-        pos.append(Vector(485,485,0))
-        pos.append(Vector(485,515,0))
-        pos.append(Vector(515,485,0))
-        pos.append(Vector(515,515,0))
-        pos.append(Vector(485,490,0))
-        pos.append(Vector(485,495,0))
-        pos.append(Vector(485,500,0))
-        pos.append(Vector(485,505,0))
-        pos.append(Vector(485,510,0))
-        pos.append(Vector(515,490,0))
-        pos.append(Vector(515,495,0))
-        pos.append(Vector(515,500,0))
-        pos.append(Vector(515,505,0))
-        pos.append(Vector(515,510,0))
-        pos.append(Vector(515,490,0))
-        pos.append(Vector(490,485,0))
-        pos.append(Vector(495,485,0))
-        pos.append(Vector(500,485,0))
-        pos.append(Vector(505,485,0))
-        pos.append(Vector(510,485,0))
-        pos.append(Vector(490,515,0))
-        pos.append(Vector(495,515,0))
-        pos.append(Vector(500,515,0))
-        pos.append(Vector(505,515,0))
-        pos.append(Vector(510,515,0))
-        
-        return pos
-    
-    else:
-        currentLaneId = g_traciStepByStep.vehicle.getLaneID(vehicle)
-        currentLane = net.getLane(currentLaneId)
+    # get the lane id in which the vehicle is currently on
+    currentLaneId = g_traciStepByStep.vehicle.getLaneID(vehicle)
+    currentLane = net.getLane(currentLaneId)
 
-        x, y = sumolib.geomhelper.positionAtShapeOffset(currentLane.getShape(), currentLane.getLength())
+    x, y = sumolib.geomhelper.positionAtShapeOffset(currentLane.getShape(), currentLane.getLength())
 
-        # Position at the end of the current lane
+    # Position at the end of the current lane
+    pos.append(Vector(x, y, 0))
+
+    for connection in currentLane.getOutgoing():
+        nextLane = connection.getToLane()
+        x, y = sumolib.geomhelper.positionAtShapeOffset(nextLane.getShape(), 0)
         pos.append(Vector(x, y, 0))
-        
-        
-        if(cmd.poi == "one"):
-            return pos
-        for connection in currentLane.getOutgoing():
-            nextLane = connection.getToLane()
-            x, y = sumolib.geomhelper.positionAtShapeOffset(nextLane.getShape(), 0)
-            pos.append(Vector(x, y, 0))
 
-            return pos
+    return pos
 
 def runSumoStep():
     Simulator.Schedule(Seconds(time_step), runSumoStep)
@@ -223,6 +191,7 @@ def runSumoStep():
             targets = getTargets(vehicle)
             # print("Vehicle:   "+vehicle+"          Points of interests:", [str(target) for target in targets])
             # print("vehicle: "+str(vehicle)+" travelled: "+str(distanceTravelled))
+            
             for target in targets:
                 Simulator.Schedule(Seconds(g_interestSendingDelay.GetValue()), sendInterest, vehicle, target)
 
@@ -360,3 +329,4 @@ Simulator.Run()
 
 g_traciStepByStep.close()
 traci.close()
+

@@ -23,6 +23,7 @@ cmd.numberOfInterest = 3
 cmd.run = 1
 cmd.minDecel = 1.5
 cmd.maxDecel = 3
+cmd.poi = "one"
 
 cmd.AddValue("traceFile", "Name of the Trace File")
 cmd.AddValue("duration", "Total simulation time")
@@ -35,6 +36,7 @@ cmd.AddValue("numberOfInterest", "How many Interest will be sent in different ta
 cmd.AddValue("run", "run")
 cmd.AddValue("minDecel", "minimum decceleration for randomness range")
 cmd.AddValue("maxDecel", "maximum decceleration for randomness range")
+cmd.AddValue("poi", "how many poi we will consider")
 
 cmd.baseline = False
 cmd.AddValue("baseline", "If it is a baseline run")
