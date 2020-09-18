@@ -53,6 +53,9 @@ g_traciDryRun = traci.getConnection("dry-run")
 traci.start(sumoCmd, label="step-by-step")
 g_traciStepByStep = traci.getConnection("step-by-step")
 
+traci.start(sumoCmd, label="pedestrian-list")
+g_traciPedList = traci.getConnection("pedestrian-list")
+
 g_names = {}
 p_names = {}
 vehicleList = []
@@ -90,6 +93,24 @@ def createAllVehicles(simTime):
 
     g_traciDryRun.close()
 
+def createAllPedestrian():
+    for t in range(1,int(cmd.duration.To(Time.S).GetDouble())):
+        # print(t)
+        g_traciPedList.simulationStep()
+        persons = g_traciPedList.person.getIDList()
+        # print(persons)
+        
+        for person in persons:
+            if (person not in pedestrianList):
+                node = addNode(person)
+                print(person)
+                p_names[person] = node
+                node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
+                node.mobility.SetPosition(posOutOfBound)
+                node.mobility.SetVelocity(Vector(0, 0, 0))
+                node.time = -1
+                pedestrianList.append(person)
+    
 time_step = 1
 
 def setSpeedToReachNextWaypoint(node, referencePos, targetPos, targetTime, referenceSpeed):
@@ -197,18 +218,7 @@ def runSumoStep():
 
     print ("Now", Simulator.Now().To(Time.S).GetDouble())
     g_traciStepByStep.simulationStep(Simulator.Now().To(Time.S).GetDouble() + time_step)
-    
-    persons = g_traciStepByStep.person.getIDList()
-    for person in persons:
-        if (person not in pedestrianList):
-            node = addNode(person)
-            print(person)
-            p_names[person] = node
-            node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
-            node.mobility.SetPosition(posOutOfBound)
-            node.mobility.SetVelocity(Vector(0, 0, 0))
-            node.time = -1
-            pedestrianList.append(person)
+
             
             
     for vehicle in g_traciStepByStep.vehicle.getIDList():
@@ -250,6 +260,8 @@ def runSumoStep():
         pos = g_traciStepByStep.person.getPosition(person)
         speed = g_traciStepByStep.person.getSpeed(person)
         angle = g_traciStepByStep.person.getAngle(person)
+        
+        # print("The position of the person "+ person+ " is: " + str(pos))
 
         if node.time < 0: # a new node
             node.time = targetTime
@@ -338,6 +350,7 @@ def risky_decelerations():
     Simulator.Schedule(Seconds(10.0), risky_decelerations)
 
 createAllVehicles(cmd.duration.To(Time.S).GetDouble())
+createAllPedestrian()
 
 if not cmd.baseline or int(cmd.baseline) != 1:
     consumerAppHelper = ndn.AppHelper("ndn::v2v::Consumer")
