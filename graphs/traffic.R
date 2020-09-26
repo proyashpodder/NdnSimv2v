@@ -5,6 +5,7 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(plyr))
 suppressPackageStartupMessages(library(tidyr))
 suppressPackageStartupMessages(library(reshape2))
+suppressPackageStartupMessages(library(ddply))
 
 # install.packages('doBy')
 suppressPackageStartupMessages(library(doBy))
@@ -90,4 +91,28 @@ d$Type = "Data"
 d =rbind(d,i)
 g <- ggplot(d,aes(x=Time,y=PacketRaw, color=Type)) + geom_line(size=0.6)+theme_custom()
 ggsave("graphs/pdfs/DataVsInterest-multiple-ped200.pdf", plot=g, width=9, height=5, device=cairo_pdf)
+
+
+
+h = file("results/one-numbers-0-rates-run-1-w-o-s.csv")
+q = read.table(h,header=TRUE)
+q = subset(q, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
+q[2:7] <- NULL
+q <- ddply(q, "Time", numcolwise(sum))
+q$Type <- "Without_Strategy"
+
+g = file("results/one-numbers-0-rates-run-1-w-s.csv")
+t = read.table(g,header=TRUE)
+t = subset(t, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
+t[2:7] <- NULL
+t <- ddply(t, "Time", numcolwise(sum))
+t$Type <- "With_Strategy"
+
+gh = data.frame(Time=q$Time,(q[2:3]-t[2:3])/q[2:3]*100)
+# g <- ggplot(gh,aes(x=Time,y=PacketRaw)) + geom_line(size=0.6)+scale_y_continuous(limits = c(0, 100))+theme_custom()
+av = summarise(gh, Average = mean(PacketRaw, na.rm = T))
+g <- ggplot(size=0.6)+geom_line(data=gh, aes(x=Time,y=PacketRaw))+geom_hline(yintercept = 30, color= "red") + theme_custom() + scale_y_continuous(limits = c(0, 100))
+ggsave("graphs/pdfs/withorwithoutstrategy.pdf", plot=g, width=9, height=5, device=cairo_pdf)
+
+
 

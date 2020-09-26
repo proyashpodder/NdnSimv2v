@@ -33,7 +33,7 @@ if not cmd.output:
 
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
-rates_file = 'results/%s-%s-rates-run-%d.csv' % (cmd.poi,cmd.output, cmd.run)
+rates_file = 'results/%s-%s-rates-run-%d-w-s.csv' % (cmd.poi,cmd.output, cmd.run)
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)

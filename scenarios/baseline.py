@@ -60,10 +60,13 @@ g_traciDryRun = traci.getConnection("dry-run")
 traci.start(sumoCmd, label="step-by-step")
 g_traciStepByStep = traci.getConnection("step-by-step")
 
+traci.start(sumoCmd, label="pedestrian-list")
+g_traciPedList = traci.getConnection("pedestrian-list")
+
 g_names = {}
 p_names = {}
 vehicleList = []
-personList = []
+pedestrianList = []
 prevList = []
 nowList = []
 collidedThisSecond = []
@@ -78,30 +81,19 @@ totalCollisionCount = 0
 riskyDeceleration = 0
 numberOfLoadedVehicle = 0
 
+port = 9   # Discard port(RFC 863)
+
 totalNumberOfPedestrian = 0
 totalTraffic = 0
 
 container = ns.network.NodeContainer()
+scontainer = ns.network.NodeContainer()
 
+clientApp = ns.network.ApplicationContainer()
+clients = CustomUdpHelper(ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)))
 
 def createAllVehicles(simTime):
     g_traciDryRun.simulationStep(simTime)
-    global container
-    #vehicleList = g_traciDryRun.simulation.getLoadedIDList()
-    persons = g_traciDryRun.person.getIDList()
-    for person in persons:
-        #print(person)
-        node = addNode(person)
-        #print(person)
-        container.Add(node.node)
-        
-        # appss.Add(client.Install(node.node))
-        p_names[person] = node
-        node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
-        node.mobility.SetPosition(posOutOfBound)
-        node.mobility.SetVelocity(Vector(0, 0, 0))
-        node.time = -1
-        personList.append(person)
     
     for vehicle in g_traciDryRun.simulation.getLoadedIDList():
         node = addNode(vehicle)
@@ -119,7 +111,54 @@ def createAllVehicles(simTime):
         vehicleList.append(vehicle)
     print(len(vehicleList))
     
-    port = 9   # Discard port(RFC 863)
+    
+    g_traciDryRun.close()
+
+def createAllPedestrian():
+    global container,scontainer
+    for t in range(1,int(cmd.duration.To(Time.S).GetDouble())):
+        # print(t)
+        g_traciPedList.simulationStep()
+        persons = g_traciPedList.person.getIDList()
+        # print(persons)
+    
+    for person in persons:
+        if (person not in pedestrianList):
+            node = addNode(person)
+            print(person)
+            p_names[person] = node
+            node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
+            node.mobility.SetPosition(posOutOfBound)
+            node.mobility.SetVelocity(Vector(0, 0, 0))
+            node.time = -1
+            pedestrianList.append(person)
+            if(person == "p4.1"):
+                print(person)
+                scontainer.Add(node.node)
+            else:
+                container.Add(node.node)
+    
+
+    
+
+    #clients.SetAttribute ("Interval", TimeValue (Seconds(1.5)))
+    #clients.SetAttribute ("PacketSize", UintegerValue (350))
+    #clients.SetAttribute ("SendData", UintegerValue(7))
+    
+    
+    
+    #print(clientApp.Get(5))
+    
+    
+    serverApp = ns.network.ApplicationContainer()
+    servers = ns.applications.UdpServerHelper(port)
+    
+    serverApp.Add(servers.Install(scontainer))
+    serverApp.Start(Seconds(2.0))
+    serverApp.Stop(Seconds(10.0))
+    
+    
+   
     
     # one approach for sending UDP packets
     appss = ns.network.ApplicationContainer()
@@ -145,8 +184,7 @@ def createAllVehicles(simTime):
     aps.Add(tr.Install(container))
     aps.Start(Seconds(1.0))
     
-    g_traciDryRun.close()
-
+            
 def setSpeedToReachNextWaypoint(node, referencePos, targetPos, targetTime, referenceSpeed):
     prevPos = node.mobility.GetPosition()
     if prevPos.z < 0:
@@ -194,17 +232,21 @@ def prepositionNode(node, targetPos, currentSpeed, angle, targetTime):
 
 def runSumoStep():
     Simulator.Schedule(Seconds(time_step), runSumoStep)
-    global totalCollisionCount, collidedPreviousSecond, riskyDeceleration, adjusted, collided, passed, numberOfLoadedVehicle, numberOfPedestrian, totalTraffic, totalNumberOfPedestrian
+    global totalCollisionCount, collidedPreviousSecond, riskyDeceleration, adjusted, collided, passed, numberOfLoadedVehicle, numberOfPedestrian, totalTraffic, totalNumberOfPedestrian,clients
     nowTime = Simulator.Now().To(Time.S).GetDouble()
     targetTime = Simulator.Now().To(Time.S).GetDouble() + time_step
 
     collisionCount = 0
     
 
-
+    for person in g_traciStepByStep.person.getIDList():
+        node = p_names[person]
+        if(getattr(node, 'apps', None)):
+            node.apps.SetAttribute("SendData", UintegerValue(7))
+    
     print ("Now", Simulator.Now().To(Time.S).GetDouble())
     g_traciStepByStep.simulationStep(Simulator.Now().To(Time.S).GetDouble() + time_step)
-    
+    clients.SetAttribute ("SendData", UintegerValue(7))
     if(nowTime % 10 == 0):
         totalTraffic = 0
         totalNumberOfPedestrian = 0
@@ -274,12 +316,15 @@ def installAllConsumerApp():
         apps.Start(Seconds(0.1))
         consumerNode.apps = apps.Get(0)
 
-def installAllProducerApp():
-    for vehicle in vehicleList:
-        producerNode = g_names[vehicle]
-        proapps = producerAppHelper.Install(producerNode.node)
-        proapps.Start(Seconds(0.5))
-        producerNode.proapps = proapps.Get(0)
+def installAllPedestrianApp():
+    for pedestrian in pedestrianList:
+        pedNode = p_names[pedestrian]
+        print(pedestrian)
+        clientApp.Add(clients.Install(pedNode.node))
+        clientApp.Start(Seconds(1.0))
+        #proapps = CustomUdpHelper.Install(producerNode.node)
+        #proapps.Start(Seconds(0.5))
+        pedNode.apps = clientApp.Get(0)
 
 def trafficCount():
     writer.writerow([Simulator.Now().To(Time.S).GetDouble(),totalNumberOfPedestrian, totalTraffic/1000])
@@ -287,7 +332,8 @@ def trafficCount():
     Simulator.Schedule(Seconds(10.0), trafficCount)
 
 createAllVehicles(cmd.duration.To(Time.S).GetDouble())
-
+createAllPedestrian()
+installAllPedestrianApp()
 if not cmd.baseline or int(cmd.baseline) != 1:
     consumerAppHelper = ndn.AppHelper("ndn::v2v::Consumer")
     producerAppHelper = ndn.AppHelper("ndn::v2v::Producer")
