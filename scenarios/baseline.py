@@ -81,7 +81,7 @@ totalCollisionCount = 0
 riskyDeceleration = 0
 numberOfLoadedVehicle = 0
 
-port = 9   # Discard port(RFC 863)
+port = 100   # Discard port(RFC 863)
 
 totalNumberOfPedestrian = 0
 totalTraffic = 0
@@ -90,14 +90,18 @@ container = ns.network.NodeContainer()
 scontainer = ns.network.NodeContainer()
 
 clientApp = ns.network.ApplicationContainer()
-clients = CustomUdpHelper(ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)))
+clients = CustomUdpHelper(ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("225.63.63.1"), port)))
+clients.SetAttribute ("PacketSize", UintegerValue (350))
+
+serverApp = ns.network.ApplicationContainer()
+servers = CustomUdpServerHelper(port)
 
 def createAllVehicles(simTime):
     g_traciDryRun.simulationStep(simTime)
     
     for vehicle in g_traciDryRun.simulation.getLoadedIDList():
         node = addNode(vehicle)
-        # container.Add(node.node)
+        scontainer.Add(node.node)
         #print(str(vehicle)+ "   "+str(node))
         g_names[vehicle] = node
         node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
@@ -134,55 +138,9 @@ def createAllPedestrian():
             pedestrianList.append(person)
             if(person == "p4.1"):
                 print(person)
-                scontainer.Add(node.node)
+                #scontainer.Add(node.node)
             else:
                 container.Add(node.node)
-    
-
-    
-
-    #clients.SetAttribute ("Interval", TimeValue (Seconds(1.5)))
-    #clients.SetAttribute ("PacketSize", UintegerValue (350))
-    #clients.SetAttribute ("SendData", UintegerValue(7))
-    
-    
-    
-    #print(clientApp.Get(5))
-    
-    
-    serverApp = ns.network.ApplicationContainer()
-    servers = ns.applications.UdpServerHelper(port)
-    
-    serverApp.Add(servers.Install(scontainer))
-    serverApp.Start(Seconds(2.0))
-    serverApp.Stop(Seconds(10.0))
-    
-    
-   
-    
-    # one approach for sending UDP packets
-    appss = ns.network.ApplicationContainer()
-    client = ns.applications.UdpClientHelper(ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)))
-
-    client.SetAttribute("Interval",TimeValue(Seconds(1)))
-    client.SetAttribute("PacketSize",UintegerValue(350))
-    # client.Send()
-    appss.Add(client.Install(container))
-    appss.Start(Seconds(1.0))
-    
-    # another approach of sending UDP packets
-    onOff = ns.applications.OnOffHelper("ns3::UdpSocketFactory",
-                                  ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)))
-    # onOff.SetAttribute("DataRate", ns.network.DataRateValue(ns.network.DataRate("100kbps")))
-    onOff.SetConstantRate (ns.network.DataRate ("350kb/s"), 350)
-    apps = onOff.Install(container)
-    apps.Start(ns.core.Seconds(1))
-    apps.Stop(ns.core.Seconds(cmd.duration - Seconds(1)))
-    
-    tr = ns.applications.UdpTraceClientHelper(ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address("10.0.0.1"), port)),"")
-    aps = ns.network.ApplicationContainer()
-    aps.Add(tr.Install(container))
-    aps.Start(Seconds(1.0))
     
             
 def setSpeedToReachNextWaypoint(node, referencePos, targetPos, targetTime, referenceSpeed):
@@ -238,15 +196,11 @@ def runSumoStep():
 
     collisionCount = 0
     
-
-    for person in g_traciStepByStep.person.getIDList():
-        node = p_names[person]
-        if(getattr(node, 'apps', None)):
-            node.apps.SetAttribute("SendData", UintegerValue(7))
     
     print ("Now", Simulator.Now().To(Time.S).GetDouble())
     g_traciStepByStep.simulationStep(Simulator.Now().To(Time.S).GetDouble() + time_step)
-    clients.SetAttribute ("SendData", UintegerValue(7))
+    
+    
     if(nowTime % 10 == 0):
         totalTraffic = 0
         totalNumberOfPedestrian = 0
@@ -261,6 +215,27 @@ def runSumoStep():
     totalTraffic = totalTraffic + traffic
     print(totalNumberOfPedestrian)
     print(totalTraffic)
+    
+    for person in g_traciStepByStep.person.getIDList():
+        node = p_names[person]
+
+        pos = g_traciStepByStep.person.getPosition(person)
+        speed = g_traciStepByStep.person.getSpeed(person)
+        angle = g_traciStepByStep.person.getAngle(person)
+        
+        # print("The position of the person "+ person+ " is: " + str(pos))
+
+        if node.time < 0: # a new node
+            node.time = targetTime
+            prepositionNode(node, Vector(pos[0], pos[1], 0.0), speed, angle, targetTime - nowTime)
+            node.referencePos = Vector(pos[0], pos[1], 0.0)
+
+            #targets = getTargets(vehicle)
+            #print("          Points of interests:", [str(target) for target in targets])
+        else:
+            node.time = targetTime
+            setSpeedToReachNextWaypoint(node, node.referencePos, Vector(pos[0], pos[1], 0.0), targetTime - nowTime, speed)
+            node.referencePos = Vector(pos[0], pos[1], 0.0)
 
     requireAdjustment = BooleanValue()
     noAdjustment = BooleanValue(False)
@@ -283,11 +258,7 @@ def runSumoStep():
             node.time = targetTime
             setSpeedToReachNextWaypoint(node, node.referencePos, Vector(pos[0], pos[1], 0.0), targetTime - nowTime, speed)
             node.referencePos = Vector(pos[0], pos[1], 0.0)
-        # g_traciStepByStep.vehicle.setSpeedMode(vehicle,0)
-        # g_traciStepByStep.vehicle.setMinGap(vehicle,0.5)
-        #if((pos[0] < 20.0 or pos[0] > 980.0 or pos[1] < 20.0 or pos[1] > 980.0) and node.time > 10):
-            #node.mobility.SetPosition(posOutOfBound)
-            #node.mobility.SetVelocity(0)
+
     collided = collidedThisSecond + collidedPreviousSecond
 
 def findDistance(x1, y1, x2, y2):
@@ -309,12 +280,9 @@ def intersection(li1, li2):
 
 
 
-def installAllConsumerApp():
-    for vehicle in vehicleList:
-        consumerNode = g_names[vehicle]
-        apps = consumerAppHelper.Install(consumerNode.node)
-        apps.Start(Seconds(0.1))
-        consumerNode.apps = apps.Get(0)
+def installAllVehicleApp():
+    serverApp.Add(servers.Install(scontainer))
+    serverApp.Start(Seconds(1.0))
 
 def installAllPedestrianApp():
     for pedestrian in pedestrianList:
@@ -328,25 +296,15 @@ def installAllPedestrianApp():
 
 def trafficCount():
     writer.writerow([Simulator.Now().To(Time.S).GetDouble(),totalNumberOfPedestrian, totalTraffic/1000])
-    #totalTraffic = 0
     Simulator.Schedule(Seconds(10.0), trafficCount)
 
 createAllVehicles(cmd.duration.To(Time.S).GetDouble())
 createAllPedestrian()
+installAllVehicleApp()
 installAllPedestrianApp()
-if not cmd.baseline or int(cmd.baseline) != 1:
-    consumerAppHelper = ndn.AppHelper("ndn::v2v::Consumer")
-    producerAppHelper = ndn.AppHelper("ndn::v2v::Producer")
-
-    # installAllConsumerApp()
-    # installAllProducerApp()
 
 Simulator.Schedule(Seconds(1), runSumoStep)
 
-ndn.L3RateTracer.InstallAll(rates_file, Seconds(10.0))
-ndn.AppDelayTracer.InstallAll(app_delays_file)
-
-Simulator.Schedule(cmd.duration - NanoSeconds(1), ndn.AppDelayTracer.Destroy)
 Simulator.Schedule(Seconds(10.0), trafficCount)
 Simulator.Stop(cmd.duration)
 Simulator.Run()
