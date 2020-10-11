@@ -108,6 +108,13 @@ t[2:7] <- NULL
 t <- ddply(t, "Time", numcolwise(sum))
 t$Type <- "With_Strategy"
 
+i = file("results/one-numbers-0-rates-run-1-w-m-s.csv")
+p = read.table(i,header=TRUE)
+p = subset(p, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
+p[2:7] <- NULL
+p <- ddply(p, "Time", numcolwise(sum))
+p$Type <- "With_Modified_Strategy"
+
 gh = data.frame(Time=q$Time,(q[2:3]-t[2:3])/q[2:3]*100)
 # g <- ggplot(gh,aes(x=Time,y=PacketRaw)) + geom_line(size=0.6)+scale_y_continuous(limits = c(0, 100))+theme_custom()
 av = summarise(gh, Average = mean(PacketRaw, na.rm = T))

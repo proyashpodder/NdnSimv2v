@@ -440,6 +440,7 @@ Simulator.Schedule(Seconds(10.0), risky_decelerations)
 ndn.L3RateTracer.InstallAll(rates_file, Seconds(10.0))
 ndn.AppDelayTracer.InstallAll(app_delays_file)
 
+
 Simulator.Schedule(cmd.duration - NanoSeconds(1), ndn.AppDelayTracer.Destroy)
 
 Simulator.Stop(cmd.duration)

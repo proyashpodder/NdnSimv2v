@@ -18,9 +18,11 @@ import math
 import csv
 import ns.network
 import ns.applications
+import ns.core
 
 time_step = 1
 
+udp_packet_file = 'udp-packet-info.csv'
 g_interestSendingDelay = UniformRandomVariable()
 g_interestSendingDelay.SetAttribute("Min", DoubleValue(0.0))
 g_interestSendingDelay.SetAttribute("Max", DoubleValue(0.5))
@@ -75,7 +77,8 @@ adjusted = []
 collided = []
 passed = []
 
-posOutOfBound = Vector(0, 0, -2000)
+PposOutOfBound = Vector(0, 0, -2000)
+posOutOfBound = Vector(0, 0, -9000)
 departedCount = 0
 totalCollisionCount = 0
 riskyDeceleration = 0
@@ -119,27 +122,22 @@ def createAllVehicles(simTime):
     g_traciDryRun.close()
 
 def createAllPedestrian():
-    global container,scontainer
     for t in range(1,int(cmd.duration.To(Time.S).GetDouble())):
         # print(t)
         g_traciPedList.simulationStep()
         persons = g_traciPedList.person.getIDList()
         # print(persons)
     
-    for person in persons:
-        if (person not in pedestrianList):
-            node = addNode(person)
-            print(person)
-            p_names[person] = node
-            node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
-            node.mobility.SetPosition(posOutOfBound)
-            node.mobility.SetVelocity(Vector(0, 0, 0))
-            node.time = -1
-            pedestrianList.append(person)
-            if(person == "p4.1"):
+        for person in persons:
+            if (person not in pedestrianList):
+                node = addNode(person)
                 print(person)
-                #scontainer.Add(node.node)
-            else:
+                p_names[person] = node
+                node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
+                node.mobility.SetPosition(PposOutOfBound)
+                node.mobility.SetVelocity(Vector(0, 0, 0))
+                node.time = -1
+                pedestrianList.append(person)
                 container.Add(node.node)
     
             
@@ -285,25 +283,35 @@ def installAllVehicleApp():
     serverApp.Start(Seconds(1.0))
 
 def installAllPedestrianApp():
-    for pedestrian in pedestrianList:
-        pedNode = p_names[pedestrian]
-        print(pedestrian)
-        clientApp.Add(clients.Install(pedNode.node))
-        clientApp.Start(Seconds(1.0))
+    clientApp.Add(clients.Install(container))
+    clientApp.Start(Seconds(1.0))
+    #for pedestrian in pedestrianList:
+        #pedNode = p_names[pedestrian]
+        #print(pedestrian)
+        #clientApp.Add(clients.Install(pedNode.node))
+        #clientApp.Start(Seconds(1.0))
         #proapps = CustomUdpHelper.Install(producerNode.node)
         #proapps.Start(Seconds(0.5))
-        pedNode.apps = clientApp.Get(0)
+        #pedNode.apps = clientApp.Get(0)
 
 def trafficCount():
     writer.writerow([Simulator.Now().To(Time.S).GetDouble(),totalNumberOfPedestrian, totalTraffic/1000])
     Simulator.Schedule(Seconds(10.0), trafficCount)
+
+def trace(p):
+    print("Hi")
 
 createAllVehicles(cmd.duration.To(Time.S).GetDouble())
 createAllPedestrian()
 installAllVehicleApp()
 installAllPedestrianApp()
 
+ndn.UdpPacketTracer.InstallAll(udp_packet_file)
+
 Simulator.Schedule(Seconds(1), runSumoStep)
+
+#Config.ConnectWithoutContext("/NodeList/*/ApplicationList/*/Rx",
+                                #trace);
 
 Simulator.Schedule(Seconds(10.0), trafficCount)
 Simulator.Stop(cmd.duration)

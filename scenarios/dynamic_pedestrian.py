@@ -33,7 +33,7 @@ if not cmd.output:
 
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
-rates_file = 'results/%s-%s-rates-run-%d-w-s.csv' % (cmd.poi,cmd.output, cmd.run)
+rates_file = 'results/%s-%s-rates-run-%d-w-m-s.csv' % (cmd.poi,cmd.output, cmd.run)
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)
@@ -79,7 +79,6 @@ def createAllVehicles(simTime):
     #vehicleList = g_traciDryRun.simulation.getLoadedIDList()
     for vehicle in g_traciDryRun.simulation.getLoadedIDList():
         node = addNode(vehicle)
-        #print(str(vehicle)+ "   "+str(node))
         g_names[vehicle] = node
         node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
         node.mobility.SetPosition(posOutOfBound)
@@ -95,15 +94,12 @@ def createAllVehicles(simTime):
 
 def createAllPedestrian():
     for t in range(1,int(cmd.duration.To(Time.S).GetDouble())):
-        # print(t)
         g_traciPedList.simulationStep()
         persons = g_traciPedList.person.getIDList()
-        # print(persons)
         
         for person in persons:
             if (person not in pedestrianList):
                 node = addNode(person)
-                print(person)
                 p_names[person] = node
                 node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
                 node.mobility.SetPosition(posOutOfBound)
@@ -134,18 +130,13 @@ def setSpeedToReachNextWaypoint(node, referencePos, targetPos, targetTime, refer
 
     x = targetPos.x + estimatedSpeed.x
     y = targetPos.y + estimatedSpeed.y
-    #if(x<=0 or x>=1000 or y<=0 or y>=1000):
-        #node.mobility.SetPosition(posOutOfBound)
-        #node.mobility.SetVelocity(Vector(0, 0, 0))
-    # print("Node [%s] change speed to [%s] (now = %f seconds); reference speed %f, current position: %s, target position: %s" % (node.name, str(estimatedSpeed), Simulator.Now().To(Time.S).GetDouble(), referenceSpeed, str(prevPos), str(targetPos)))
-    #else:
+
     node.mobility.SetVelocity(estimatedSpeed)
 
 def prepositionNode(node, targetPos, currentSpeed, angle, targetTime):
     '''This one is trying to set initial position of the node in such a way so it will be
        traveling at currentSpeed and arrives at the targetPos (basically, set position using reverse speed)'''
 
-    #print("Node [%s] will arrive at [%s] in %f seconds (now = %f seconds)" % (node.name, str(targetPos), targetTime, Simulator.Now().To(Time.S).GetDouble()))
 
     speed = Vector(currentSpeed * math.sin(angle * math.pi / 180), currentSpeed * math.cos(angle * math.pi / 180), 0.0)
 
@@ -231,10 +222,8 @@ def runSumoStep():
 
 
         if getattr(node, 'apps', None) and (20 < findDistance(pos[0],pos[1],500.0,500.0) < 300) and distanceTravelled < 500:
-            # print(vehicle)
+
             targets = getTargets(vehicle)
-            # print("Vehicle:   "+vehicle+"          Points of interests:", [str(target) for target in targets])
-            # print("vehicle: "+str(vehicle)+" travelled: "+str(distanceTravelled))
             for target in targets:
                 Simulator.Schedule(Seconds(g_interestSendingDelay.GetValue()), sendInterest, vehicle, target)
 
@@ -261,15 +250,12 @@ def runSumoStep():
         speed = g_traciStepByStep.person.getSpeed(person)
         angle = g_traciStepByStep.person.getAngle(person)
         
-        # print("The position of the person "+ person+ " is: " + str(pos))
 
         if node.time < 0: # a new node
             node.time = targetTime
             prepositionNode(node, Vector(pos[0], pos[1], 0.0), speed, angle, targetTime - nowTime)
             node.referencePos = Vector(pos[0], pos[1], 0.0)
 
-            #targets = getTargets(vehicle)
-            #print("          Points of interests:", [str(target) for target in targets])
         else:
             node.time = targetTime
             setSpeedToReachNextWaypoint(node, node.referencePos, Vector(pos[0], pos[1], 0.0), targetTime - nowTime, speed)
@@ -309,9 +295,8 @@ def installAllProducerApp():
         producerNode.proapps = proapps.Get(0)
 
 def sendInterest(vehID,target):
-    # print(vehID)
     consumerNode = g_names[vehID]
-    print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
+    #print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
     consumerNode.apps.SetAttribute("RequestPositionStatus", StringValue(str(target)))
 
 def writeToFile():
