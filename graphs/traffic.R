@@ -122,4 +122,26 @@ g <- ggplot(size=0.6)+geom_line(data=gh, aes(x=Time,y=PacketRaw))+geom_hline(yin
 ggsave("graphs/pdfs/withorwithoutstrategy.pdf", plot=g, width=9, height=5, device=cairo_pdf)
 
 
+x = file("results/current_strategy.csv")
+c = read.table(x,header=TRUE)
+c = subset(c, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
+c[2:7] <- NULL
+c <- ddply(t, "Time", numcolwise(sum))
+c$Type <- "Current_Strategy"
+
+
+y = file("results/proximity.csv")
+p = read.table(y,header=TRUE)
+p = subset(p, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
+p[2:7] <- NULL
+p <- ddply(p, "Time", numcolwise(sum))
+p$Type <- "Proximity"
+
+z = file("results/proximity_1hop.csv")
+h = read.table(z,header=TRUE)
+h = subset(h, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
+h[2:7] <- NULL
+h <- ddply(h, "Time", numcolwise(sum))
+h$Type <- "1Hop_Proximity"
+
 

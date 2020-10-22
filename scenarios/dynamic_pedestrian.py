@@ -33,7 +33,8 @@ if not cmd.output:
 
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
-rates_file = 'results/%s-%s-rates-run-%d-w-m-s.csv' % (cmd.poi,cmd.output, cmd.run)
+#rates_file = 'results/%s-%s-rates-run-%d-w-m-s.csv' % (cmd.poi,cmd.output, cmd.run)
+rates_file = 'results/current_strategy.csv'
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)
@@ -78,7 +79,7 @@ def createAllVehicles(simTime):
     g_traciDryRun.simulationStep(simTime)
     #vehicleList = g_traciDryRun.simulation.getLoadedIDList()
     for vehicle in g_traciDryRun.simulation.getLoadedIDList():
-        node = addNode(vehicle)
+        node = addNode(vehicle,"vehicle")
         g_names[vehicle] = node
         node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
         node.mobility.SetPosition(posOutOfBound)
@@ -99,7 +100,7 @@ def createAllPedestrian():
         
         for person in persons:
             if (person not in pedestrianList):
-                node = addNode(person)
+                node = addNode(person,"pedestrian")
                 p_names[person] = node
                 node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())
                 node.mobility.SetPosition(posOutOfBound)
@@ -221,7 +222,7 @@ def runSumoStep():
         distanceTravelled = g_traciStepByStep.vehicle.getDistance(vehicle)
 
 
-        if getattr(node, 'apps', None) and (20 < findDistance(pos[0],pos[1],500.0,500.0) < 300) and distanceTravelled < 500:
+        if getattr(node, 'apps', None) and (20 < findDistance(pos[0],pos[1],500.0,500.0) < 100) and distanceTravelled < 500:
 
             targets = getTargets(vehicle)
             for target in targets:
@@ -293,10 +294,10 @@ def installAllProducerApp():
         proapps = producerAppHelper.Install(producerNode.node)
         proapps.Start(Seconds(0.5))
         producerNode.proapps = proapps.Get(0)
-
+        
 def sendInterest(vehID,target):
     consumerNode = g_names[vehID]
-    #print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
+    print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
     consumerNode.apps.SetAttribute("RequestPositionStatus", StringValue(str(target)))
 
 def writeToFile():

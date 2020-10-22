@@ -51,7 +51,7 @@ csv_writer1.writerow(["Duration","Total_Number_Of_Vehicle","Total_Risky_Decelera
 
 traffic_file = open('results/baseline-traffic-1.csv', 'w')
 writer = csv.writer(traffic_file)
-writer.writerow(["Time","PacketsRaw","KilobytesRaw"])
+writer.writerow(["Time","PacketRaw","KilobytesRaw"])
 
 net = sumolib.net.readNet('%s.net.xml' % cmd.traceFile)
 sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile]

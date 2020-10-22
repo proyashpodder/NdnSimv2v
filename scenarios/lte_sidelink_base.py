@@ -69,7 +69,7 @@ ndnHelper.SetDefaultRoutePrefix(ndn.Name("/v2vSafety"))
 customHelper = CustomHelper()
 
 # ///*** Configure applications ***///
-def addNode(name):
+def addNode(name, type):
     node = Node()
     mobility.Install(node)
     customHelper.Install(node) # install LTE SideLink + Internet
@@ -79,7 +79,10 @@ def addNode(name):
     ndnHelper.Install(node)
 
     # Choosing forwarding strategy
-    ndn.StrategyChoiceHelper.Install(node, "/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +str(cmd.tmin) + "/" + str(cmd.tmax))
+    if(type == "pedestrian"):
+        ndn.StrategyChoiceHelper.Install(node, "/", "/localhost/nfd/strategy/directed-geocast-pedestrian/%FD%01/" +str(cmd.tmin) + "/" + str(cmd.tmax))
+    else:
+        ndn.StrategyChoiceHelper.Install(node, "/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +str(cmd.tmin) + "/" + str(cmd.tmax))
 
     class Tuple:
         def __init__(self, node, dev, ip, name):
