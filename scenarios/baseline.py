@@ -49,7 +49,7 @@ file = open('results/%s-risky-decelerations-run-%d.csv' % (cmd.output, cmd.run),
 csv_writer1 = csv.writer(file)
 csv_writer1.writerow(["Duration","Total_Number_Of_Vehicle","Total_Risky_Deceleration_Count","Total_Number_Of_Risky_Decelerated_Car"])
 
-traffic_file = open('results/baseline-traffic-1.csv', 'w')
+traffic_file = open('results/baseline-ped-400.csv', 'w')
 writer = csv.writer(traffic_file)
 writer.writerow(["Time","PacketRaw","KilobytesRaw"])
 
@@ -103,7 +103,7 @@ def createAllVehicles(simTime):
     g_traciDryRun.simulationStep(simTime)
     
     for vehicle in g_traciDryRun.simulation.getLoadedIDList():
-        node = addNode(vehicle)
+        node = addNode(vehicle,"vehicle")
         scontainer.Add(node.node)
         #print(str(vehicle)+ "   "+str(node))
         g_names[vehicle] = node
@@ -130,7 +130,7 @@ def createAllPedestrian():
     
         for person in persons:
             if (person not in pedestrianList):
-                node = addNode(person)
+                node = addNode(person,"pedestrian")
                 print(person)
                 p_names[person] = node
                 node.mobility = node.node.GetObject(ConstantVelocityMobilityModel.GetTypeId())

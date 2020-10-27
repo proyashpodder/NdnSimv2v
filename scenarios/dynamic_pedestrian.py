@@ -34,11 +34,16 @@ if not cmd.output:
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
 #rates_file = 'results/%s-%s-rates-run-%d-w-m-s.csv' % (cmd.poi,cmd.output, cmd.run)
-rates_file = 'results/current_strategy.csv'
+rates_file = 'results/100-ped-1-poi-'+str(cmd.dis)+'-consumerdistance.csv'
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)
 csv_writer.writerow(["Duration","Total_Number_Of_Vehicle","Total_Adjusted_Car","Total_Collided_Car","Total_Passed_Car","Total_AdjustedNot_CollidedCar","totalCollidedNotAdjustedCar","totalAdjustedButCollidedCar","totalAdjustedAndPassedCar"])
+
+consumer_file = open('results/consumerCount-distance-'+str(cmd.dis)+'.csv', 'w')
+writer = csv.writer(consumer_file)
+writer.writerow(["Time","CnsumerCount"])
+
 
 file = open('results/%s-risky-decelerations-run-%d.csv' % (cmd.output, cmd.run), 'w')
 csv_writer1 = csv.writer(file)
@@ -46,6 +51,8 @@ csv_writer1.writerow(["Duration","Total_Number_Of_Vehicle","Total_Risky_Decelera
 
 
 net = sumolib.net.readNet('%s.net.xml' % cmd.traceFile)
+distance = float(cmd.dis)
+consumerCounter = 0
 sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile]
 
 traci.start(sumoCmd, label="dry-run") # whole run to estimate and created all nodes with out of bound position and 0 speeds
@@ -70,7 +77,7 @@ collided = []
 passed = []
 
 posOutOfBound = Vector(0, 0, -2000)
-departedCount = 0
+departedCounter = 0
 totalCollisionCount = 0
 riskyDeceleration = 0
 numberOfLoadedVehicle = 0
@@ -204,12 +211,15 @@ def getTargets(vehicle):
 
 def runSumoStep():
     Simulator.Schedule(Seconds(time_step), runSumoStep)
-    global totalCollisionCount, collidedPreviousSecond, riskyDeceleration, adjusted, collided, passed, numberOfLoadedVehicle
+    global totalCollisionCount, collidedPreviousSecond, riskyDeceleration, adjusted, collided, passed, numberOfLoadedVehicle, consumerCounter
     nowTime = Simulator.Now().To(Time.S).GetDouble()
     targetTime = Simulator.Now().To(Time.S).GetDouble() + time_step
 
     print ("Now", Simulator.Now().To(Time.S).GetDouble())
     g_traciStepByStep.simulationStep(Simulator.Now().To(Time.S).GetDouble() + time_step)
+    
+    if(nowTime % 10 == 0):
+        consumerCounter = 0
 
             
             
@@ -222,8 +232,9 @@ def runSumoStep():
         distanceTravelled = g_traciStepByStep.vehicle.getDistance(vehicle)
 
 
-        if getattr(node, 'apps', None) and (20 < findDistance(pos[0],pos[1],500.0,500.0) < 100) and distanceTravelled < 500:
-
+        if getattr(node, 'apps', None) and (20 < findDistance(pos[0],pos[1],500.0,500.0) < distance) and distanceTravelled < 500:
+            if(speed > 0.1):
+                consumerCounter = consumerCounter + 1
             targets = getTargets(vehicle)
             for target in targets:
                 Simulator.Schedule(Seconds(g_interestSendingDelay.GetValue()), sendInterest, vehicle, target)
@@ -297,8 +308,13 @@ def installAllProducerApp():
         
 def sendInterest(vehID,target):
     consumerNode = g_names[vehID]
-    print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
+    #print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
     consumerNode.apps.SetAttribute("RequestPositionStatus", StringValue(str(target)))
+
+def consumerCount():
+    print("I come here")
+    writer.writerow([Simulator.Now().To(Time.S).GetDouble(),consumerCounter])
+    Simulator.Schedule(Seconds(10.0), consumerCount)
 
 def writeToFile():
     adjusted = []
@@ -355,6 +371,7 @@ ndn.L3RateTracer.InstallAll(rates_file, Seconds(10.0))
 ndn.AppDelayTracer.InstallAll(app_delays_file)
 
 Simulator.Schedule(cmd.duration - NanoSeconds(1), ndn.AppDelayTracer.Destroy)
+Simulator.Schedule(Seconds(10.0), consumerCount)
 
 Simulator.Stop(cmd.duration)
 Simulator.Run()

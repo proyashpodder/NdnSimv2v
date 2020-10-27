@@ -15,16 +15,16 @@
   <person id="person_1" depart="0">
         <walk edges="2i 1o" speed="0.5"/>
    </person>--> 
-<personFlow id="p1" type="p0" begin="0" end="50" number="15" departPos="random">
+<personFlow id="p1" type="p0" begin="0" end="60" number="100" departPos="random">
        <walk from="1i" to="2o" speed="1.2"/>
   </personFlow>
-<personFlow id="p2" type="p0" begin="0" end="50" number="15" departPos="random">
+<personFlow id="p2" type="p0" begin="0" end="60" number="100" departPos="random">
        <walk from="2i" to="1o" speed="1.1"/>
   </personFlow>
-<personFlow id="p3" type="p0" begin="0" end="50" number="15" departPos="random">
+<personFlow id="p3" type="p0" begin="0" end="60" number="100" departPos="random">
        <walk from="3i" to="4o" speed="1.25"/>
   </personFlow>
-<personFlow id="p4" type="p0" begin="0" end="50" number="15" departPos="random">
+<personFlow id="p4" type="p0" begin="0" end="60" number="100" departPos="random">
        <walk from="4i" to="3o" speed="1.5"/>
   </personFlow>
 <!--<vehicle depart="0" id="v01" route="r01" departSpeed="15" type="CarC"/>

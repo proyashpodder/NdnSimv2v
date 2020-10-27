@@ -24,6 +24,7 @@ cmd.run = 1
 cmd.minDecel = 1.5
 cmd.maxDecel = 3
 cmd.poi = "one"
+cmd.dis = 300
 
 cmd.AddValue("traceFile", "Name of the Trace File")
 cmd.AddValue("duration", "Total simulation time")
@@ -37,6 +38,7 @@ cmd.AddValue("run", "run")
 cmd.AddValue("minDecel", "minimum decceleration for randomness range")
 cmd.AddValue("maxDecel", "maximum decceleration for randomness range")
 cmd.AddValue("poi", "how many poi we will consider")
+cmd.AddValue("dis", "max distance to be a consumer")
 
 cmd.baseline = False
 cmd.AddValue("baseline", "If it is a baseline run")

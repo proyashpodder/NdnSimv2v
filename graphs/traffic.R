@@ -126,7 +126,7 @@ x = file("results/current_strategy.csv")
 c = read.table(x,header=TRUE)
 c = subset(c, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
 c[2:7] <- NULL
-c <- ddply(t, "Time", numcolwise(sum))
+c <- ddply(c, "Time", numcolwise(sum))
 c$Type <- "Current_Strategy"
 
 
@@ -143,5 +143,50 @@ h = subset(h, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData")
 h[2:7] <- NULL
 h <- ddply(h, "Time", numcolwise(sum))
 h$Type <- "1Hop_Proximity"
+
+
+y = file("results/100-ped-12-poi-50-consumerdistance.csv")
+p = read.table(y,header=TRUE)
+p = subset(p, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
+p[2:7] <- NULL
+data <- ddply(p, "Time", numcolwise(sum))
+data$Type <- "50"
+
+
+l <- c(100,150,200,250,300)
+#data=data.frame(Time=integer(), PacketsRaw=double(), KilobytesRaw=factor())
+for (i in l){
+    #print(paste(sep='','results/new-400-ped-12-poi-',i,'-consumerdistance.csv'))
+    f = file(paste(sep='', 'results/100-ped-12-poi-',i,'-consumerdistance.csv'))
+    d = read.table(f,header=TRUE)
+    d = subset(d, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
+    d[2:7] <- NULL
+    d <- ddply(p, "Time", numcolwise(sum))
+    d$Type <- i
+    data = rbind(data,d)
+}
+
+
+
+y = file("results/200-ped-1-poi-100-consumerdistance.csv")
+q = read.table(y,header=TRUE)
+p = subset(q, FaceDescr=="lte://" & (Type == "OutInterests"))
+p[2:7] <- NULL
+p <- ddply(p, "Time", numcolwise(sum))
+p$Type <- "Interest"
+
+r = subset(q, FaceDescr=="lte://" & (Type == "OutData"))
+r[2:7] <- NULL
+r <- ddply(r, "Time", numcolwise(sum))
+r$Type <- "Data"
+
+pr = rbind(p,r)
+
+b <- read.csv(file="results/consumerCount-distance-100.csv")
+b$Type = "consumerCount"
+
+
+g <- ggplot(pr,aes(x=Time,y=PacketRaw, color=Type)) + geom_line(size=0.6)+theme_custom() + scale_x_continuous(name="Time (s)", limits=c(0, 120))
+ggsave("graphs/pdfs/1Poi-ped200-Data-Interest.pdf", plot=g, width=9, height=5, device=cairo_pdf)
 
 
