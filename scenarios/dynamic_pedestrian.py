@@ -198,16 +198,7 @@ def getTargets(vehicle):
 
         # Position at the end of the current lane
         pos.append(Vector(x, y, 0))
-        
-        
-        if(cmd.poi == "one"):
-            return pos
-        for connection in currentLane.getOutgoing():
-            nextLane = connection.getToLane()
-            x, y = sumolib.geomhelper.positionAtShapeOffset(nextLane.getShape(), 0)
-            pos.append(Vector(x, y, 0))
-
-            return pos
+        return pos
 
 def runSumoStep():
     Simulator.Schedule(Seconds(time_step), runSumoStep)
@@ -308,7 +299,7 @@ def installAllProducerApp():
         
 def sendInterest(vehID,target):
     consumerNode = g_names[vehID]
-    #print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
+    print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
     consumerNode.apps.SetAttribute("RequestPositionStatus", StringValue(str(target)))
 
 def consumerCount():
