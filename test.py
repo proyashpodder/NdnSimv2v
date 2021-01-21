@@ -23,9 +23,13 @@ while step < 100:
         pos = traci.vehicle.getPosition(vehicle)
         angle = traci.vehicle.getAngle(vehicle)
         traci.vehicle.setSpeedMode(vehicle,30)
+        if(90 < traci.vehicle.getDistance(vehicle) < 100):
+            traci.vehicle.setSpeed(vehicle,20)
+            print("hola")
+        print(speed)
     for pedestrian in pedestrians:
         speed = round(traci.person.getSpeed(pedestrian))
-        print(speed)
+        
 
     step = step + 1
 

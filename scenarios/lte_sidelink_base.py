@@ -16,8 +16,8 @@ cmd.traceFile = "sumo/intersection"
 cmd.sumo_granularity = Seconds(1)
 cmd.duration = Seconds(20)
 cmd.logFile = "default.log"
-cmd.tmin = 0.02
-cmd.tmax = 0.2
+cmd.tmin = 0.2
+cmd.tmax = 0.5
 cmd.vis = False
 cmd.numberOfInterest = 3
 cmd.run = 1
@@ -25,6 +25,8 @@ cmd.minDecel = 1.5
 cmd.maxDecel = 3
 cmd.poi = "one"
 cmd.dis = 300
+cmd.tminD = 0.2
+cmd.tmaxD = 0.45
 
 cmd.AddValue("traceFile", "Name of the Trace File")
 cmd.AddValue("duration", "Total simulation time")
@@ -39,6 +41,8 @@ cmd.AddValue("minDecel", "minimum decceleration for randomness range")
 cmd.AddValue("maxDecel", "maximum decceleration for randomness range")
 cmd.AddValue("poi", "how many poi we will consider")
 cmd.AddValue("dis", "max distance to be a consumer")
+cmd.AddValue("tminD", "minimum time")
+cmd.AddValue("tmaxD", "maximum time")
 
 cmd.baseline = False
 cmd.AddValue("baseline", "If it is a baseline run")
@@ -82,7 +86,7 @@ def addNode(name, type):
 
     # Choosing forwarding strategy
     if(type == "pedestrian"):
-        ndn.StrategyChoiceHelper.Install(node, "/", "/localhost/nfd/strategy/directed-geocast-pedestrian/%FD%01/" +str(cmd.tmin) + "/" + str(cmd.tmax))
+        ndn.StrategyChoiceHelper.Install(node, "/", "/localhost/nfd/strategy/directed-geocast-pedestrian/%FD%01/" +str(cmd.tminD) + "/" + str(cmd.tmaxD))
     else:
         ndn.StrategyChoiceHelper.Install(node, "/", "/localhost/nfd/strategy/directed-geocast/%FD%01/" +str(cmd.tmin) + "/" + str(cmd.tmax))
 

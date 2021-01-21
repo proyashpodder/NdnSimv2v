@@ -49,7 +49,7 @@ file = open('results/%s-risky-decelerations-run-%d.csv' % (cmd.output, cmd.run),
 csv_writer1 = csv.writer(file)
 csv_writer1.writerow(["Duration","Total_Number_Of_Vehicle","Total_Risky_Deceleration_Count","Total_Number_Of_Risky_Decelerated_Car"])
 
-traffic_file = open('results/baseline-ped-400.csv', 'w')
+traffic_file = open('results/baseline-ped-640.csv', 'w')
 writer = csv.writer(traffic_file)
 writer.writerow(["Time","PacketRaw","KilobytesRaw"])
 

@@ -34,7 +34,8 @@ if not cmd.output:
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
 #rates_file = 'results/%s-%s-rates-run-%d-w-m-s.csv' % (cmd.poi,cmd.output, cmd.run)
-rates_file = 'results/100-ped-1-poi-'+str(cmd.dis)+'-consumerdistance.csv'
+rates_file = 'results/modified-simulation-hd-40.csv'
+#rates_file = 'results/40-near-'+str(cmd.run)+'-'+str(cmd.tminD)+'-'+str(cmd.tmaxD)+'-hd-640-ped-12-poi-6-pro-'+str(cmd.dis)+'-consumerdistance.csv'
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)
@@ -53,6 +54,7 @@ csv_writer1.writerow(["Duration","Total_Number_Of_Vehicle","Total_Risky_Decelera
 net = sumolib.net.readNet('%s.net.xml' % cmd.traceFile)
 distance = float(cmd.dis)
 consumerCounter = 0
+#sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile,"--random"]
 sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile]
 
 traci.start(sumoCmd, label="dry-run") # whole run to estimate and created all nodes with out of bound position and 0 speeds
@@ -84,7 +86,8 @@ numberOfLoadedVehicle = 0
 
 def createAllVehicles(simTime):
     g_traciDryRun.simulationStep(simTime)
-    #vehicleList = g_traciDryRun.simulation.getLoadedIDList()
+    #vehicleCount = g_traciDryRun.simulation.getLoadedIDNumber()
+    #print("Total number of Car is: "+ str(vehicleCount))
     for vehicle in g_traciDryRun.simulation.getLoadedIDList():
         node = addNode(vehicle,"vehicle")
         g_names[vehicle] = node
@@ -166,30 +169,37 @@ def getTargets(vehicle):
         pos.append(Vector(485,515,0))
         pos.append(Vector(515,485,0))
         pos.append(Vector(515,515,0))
-        pos.append(Vector(485,490,0))
+        #pos.append(Vector(485,490,0))
         pos.append(Vector(485,495,0))
-        pos.append(Vector(485,500,0))
+        #pos.append(Vector(485,500,0))
         pos.append(Vector(485,505,0))
-        pos.append(Vector(485,510,0))
-        pos.append(Vector(515,490,0))
+        #pos.append(Vector(485,510,0))
+        #pos.append(Vector(515,490,0))
         pos.append(Vector(515,495,0))
-        pos.append(Vector(515,500,0))
+        #pos.append(Vector(515,500,0))
         pos.append(Vector(515,505,0))
-        pos.append(Vector(515,510,0))
-        pos.append(Vector(515,490,0))
-        pos.append(Vector(490,485,0))
+        #pos.append(Vector(515,510,0))
+        #pos.append(Vector(515,490,0))
+        #pos.append(Vector(490,485,0))
         pos.append(Vector(495,485,0))
-        pos.append(Vector(500,485,0))
+        #pos.append(Vector(500,485,0))
         pos.append(Vector(505,485,0))
-        pos.append(Vector(510,485,0))
-        pos.append(Vector(490,515,0))
+        #pos.append(Vector(510,485,0))
+        #pos.append(Vector(490,515,0))
         pos.append(Vector(495,515,0))
-        pos.append(Vector(500,515,0))
+        #pos.append(Vector(500,515,0))
         pos.append(Vector(505,515,0))
-        pos.append(Vector(510,515,0))
+        #pos.append(Vector(510,515,0))
         
         return pos
     
+    elif(cmd.poi == "four"):
+        pos.append(Vector(500,485,0))
+        pos.append(Vector(500,515,0))
+        pos.append(Vector(485,500,0))
+        pos.append(Vector(515,500,0))
+        
+        return pos
     else:
         currentLaneId = g_traciStepByStep.vehicle.getLaneID(vehicle)
         currentLane = net.getLane(currentLaneId)
@@ -224,11 +234,11 @@ def runSumoStep():
 
 
         if getattr(node, 'apps', None) and (20 < findDistance(pos[0],pos[1],500.0,500.0) < distance) and distanceTravelled < 500:
-            if(speed > 0.1):
+            if(speed > 0.5):
                 consumerCounter = consumerCounter + 1
-            targets = getTargets(vehicle)
-            for target in targets:
-                Simulator.Schedule(Seconds(g_interestSendingDelay.GetValue()), sendInterest, vehicle, target)
+                targets = getTargets(vehicle)
+                for target in targets:
+                    Simulator.Schedule(Seconds(g_interestSendingDelay.GetValue()), sendInterest, vehicle, target)
 
         if node.time < 0: # a new node
             node.time = targetTime
@@ -246,6 +256,11 @@ def runSumoStep():
         #if((pos[0] < 20.0 or pos[0] > 980.0 or pos[1] < 20.0 or pos[1] > 980.0) and node.time > 10):
             #node.mobility.SetPosition(posOutOfBound)
             #node.mobility.SetVelocity(0)
+        if (findDistance(pos[0],pos[1],500.0,500.0) < 80):
+            g_traciStepByStep.vehicle.setSpeedMode(vehicle,30)
+            g_traciStepByStep.vehicle.setSpeed(vehicle,20)
+            #print(speed)
+            #print(vehicle)
     for person in g_traciStepByStep.person.getIDList():
         node = p_names[person]
 
@@ -299,7 +314,7 @@ def installAllProducerApp():
         
 def sendInterest(vehID,target):
     consumerNode = g_names[vehID]
-    print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
+    #print("sending Interest by "+ str(vehID)+" at: " + str(Simulator.Now().To(Time.S).GetDouble()))
     consumerNode.apps.SetAttribute("RequestPositionStatus", StringValue(str(target)))
 
 def consumerCount():

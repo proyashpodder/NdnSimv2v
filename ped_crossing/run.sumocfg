@@ -19,6 +19,7 @@
       <collision.action value="teleport"/>
       <collision.stoptime value="2"/>
       <time-to-teleport value="120"/>
+      <summary value="summary.xml"/>
     </processing>
     <!--<gui_only>
         <gui-settings-file value="viewsettings.xml"/>
