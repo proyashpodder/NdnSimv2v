@@ -34,8 +34,8 @@ if not cmd.output:
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
 #rates_file = 'results/%s-%s-rates-run-%d-w-m-s.csv' % (cmd.poi,cmd.output, cmd.run)
-rates_file = 'results/modified-simulation-hd-40.csv'
-#rates_file = 'results/40-near-'+str(cmd.run)+'-'+str(cmd.tminD)+'-'+str(cmd.tmaxD)+'-hd-640-ped-12-poi-6-pro-'+str(cmd.dis)+'-consumerdistance.csv'
+rates_file = 'results/modified-simulation-hd-80.csv'
+#rates_file = 'results/near-'+str(cmd.run)+'-'+str(cmd.tminD)+'-'+str(cmd.tmaxD)+'-hd-80-ped-12-poi-6-pro-'+str(cmd.dis)+'-consumerdistance.csv'
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)
@@ -56,6 +56,7 @@ distance = float(cmd.dis)
 consumerCounter = 0
 #sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile,"--random"]
 sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile]
+print(cmd.traceFile)
 
 traci.start(sumoCmd, label="dry-run") # whole run to estimate and created all nodes with out of bound position and 0 speeds
 g_traciDryRun = traci.getConnection("dry-run")
