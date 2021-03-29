@@ -25,8 +25,8 @@ cmd.minDecel = 1.5
 cmd.maxDecel = 3
 cmd.poi = "one"
 cmd.dis = 300
-cmd.tminD = 0.2
-cmd.tmaxD = 0.45
+cmd.tminD = 0.0001
+cmd.tmaxD = 0.5
 
 cmd.AddValue("traceFile", "Name of the Trace File")
 cmd.AddValue("duration", "Total simulation time")

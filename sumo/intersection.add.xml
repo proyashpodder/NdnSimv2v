@@ -1,5 +1,6 @@
 <additional>
   <!--<tlLogic id="0" type="static" programID="off">
   </tlLogic>-->
-  <edgeData id="1i" file="1i.xml" freq="10" excludeEmpty="true"/>
+  <edgeData id="1i" file="edgeData.xml" vtype="CarB" freq="10" excludeEmpty="true"/>
+  <laneData id="lane" file="laneData.xml" freq="10" excludeEmpty="true"/>
 </additional>

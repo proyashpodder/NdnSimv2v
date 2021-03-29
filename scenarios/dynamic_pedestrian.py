@@ -34,14 +34,14 @@ if not cmd.output:
 data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel)), 'w')
 
 #rates_file = 'results/%s-%s-rates-run-%d-w-m-s.csv' % (cmd.poi,cmd.output, cmd.run)
-rates_file = 'results/modified-simulation-hd-80.csv'
-#rates_file = 'results/near-'+str(cmd.run)+'-'+str(cmd.tminD)+'-'+str(cmd.tmaxD)+'-hd-80-ped-12-poi-6-pro-'+str(cmd.dis)+'-consumerdistance.csv'
+#rates_file = 'results/modified-simulation-hd-80.csv'
+rates_file = 'results/nowTime-'+str(cmd.run)+'-'+str(cmd.tminD)+'-'+str(cmd.tmaxD)+'-4-hd-320-ped-12-poi-6-pro-'+str(cmd.dis)+'-consumerdistance.csv'
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)
 csv_writer.writerow(["Duration","Total_Number_Of_Vehicle","Total_Adjusted_Car","Total_Collided_Car","Total_Passed_Car","Total_AdjustedNot_CollidedCar","totalCollidedNotAdjustedCar","totalAdjustedButCollidedCar","totalAdjustedAndPassedCar"])
 
-consumer_file = open('results/consumerCount-distance-'+str(cmd.dis)+'.csv', 'w')
+consumer_file = open('results/'+str(cmd.run)+'consumerCount-distance-'+str(cmd.dis)+'-16.csv', 'w')
 writer = csv.writer(consumer_file)
 writer.writerow(["Time","CnsumerCount"])
 
@@ -54,8 +54,8 @@ csv_writer1.writerow(["Duration","Total_Number_Of_Vehicle","Total_Risky_Decelera
 net = sumolib.net.readNet('%s.net.xml' % cmd.traceFile)
 distance = float(cmd.dis)
 consumerCounter = 0
-#sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile,"--random"]
-sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile]
+sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile,"--random"]
+#sumoCmd = ["sumo", "-c", "%s.sumocfg" % cmd.traceFile]
 print(cmd.traceFile)
 
 traci.start(sumoCmd, label="dry-run") # whole run to estimate and created all nodes with out of bound position and 0 speeds

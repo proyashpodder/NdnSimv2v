@@ -144,7 +144,23 @@ class OneConsumer(Processor):
     def postprocess (self):
         # any postprocessing, if any
         pass
-    
+
+class AllRun(Processor):
+    def __init__ (self, name):
+        self.name = name
+        # other initialization, if any
+
+    def simulate (self):
+        for distance in [300]:
+            for run in range(1,11):
+                cmdline = ["python3", "./scenarios/dynamic_pedestrian.py", "--duration=61", "--run={}".format(run), "--dis={}".format(distance)]
+                job = SimulationJob (cmdline)
+                pool.put(job)
+
+    def postprocess (self):
+        # any postprocessing, if any
+        pass
+
 try:
     # Simulation, processing, and graph building
     fig = Baseline(name="baseline")
@@ -157,6 +173,9 @@ try:
     fig.run()
 
     fig = OneConsumer(name="one-consumer")
+    fig.run()
+    
+    fig = AllRun(name="all-run")
     fig.run()
 
 finally:
