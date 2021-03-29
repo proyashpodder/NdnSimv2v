@@ -132,4 +132,75 @@ Outputs:
 -`nowTime-1-0.0001-0.5-4-hd-320-ped-12-poi-6-pro-300-consumerdistance.csv'`
 -`nowTime-1-0.0001-0.5-4-hd-640-ped-12-poi-6-pro-300-consumerdistance.csv'`
 
+Changing Parameters
+====================
 
+change the number of pedestrians:
+------------------------------------
+
+To change the number of pedestrians, you need to modify the following file:
+
+	sumo/inter.rou.xml
+
+In that file, you will see the configuration of person flow, where you need to change the number parameter. 
+As we generate 4 different but equal number of person flow so, if you want to generate '4X' pedestrians, generate 'X' people from each flow.
+For example, if we want total of 320 people, generate 80 people from each flow.
+
+![personflow](personflow.png)
+
+Change the number of vehicles:
+--------------------------------
+
+To change the number of vehicles, you also need to modify the **inter.rou.xml** file.
+
+In that file, you will see a few flows commented as low, medium, or high density vehicles. Just uncomment the flow (i.e., low density) you want to simulate.
+For example, if you want to simulate a medium density scenario, uncomment it and the low and high density should be commented out.
+
+![vehicleflow](/vehicleflow.png)
+
+Run the Baseline scenario:
+===========================
+
+To run the baseline scenario, run the following command:
+
+	python3 scenarios/baseline.py 
+
+For different numbers of pedestrians, you need to change both in the **inter.rou.xml** and **baseline.py**.
+
+Generating the Graphs:
+=======================
+
+We primarily have 4 different graphs to generate:
+
+1. For comparison with baseline and different densities of vehicle in **Single-Hop** scenario, use the following file:
+
+	graphs/comparison-single-hop.R
+
+It will generate the following graph:
+	
+	/graphs/pdfs/single-hop-comparison.pdf
+
+
+2. For comparison with baseline and different densities of vehicle in **Multi-Hops** scenario, use the following file:
+
+	graphs/comparison-multi-hops.R
+
+It will generate the following graph:
+
+	/graphs/pdfs/multi-hops-comparison.pdf
+
+3. For showing that, the number of Interest does not grow exponentially with the increasing number of vehicles (i.e., proof of Interest suppression is working), use the following file:
+
+	/graphs/Interest.R
+
+It will generate the following graph:
+
+	graphs/pdfs/Interests.pdf
+
+4. For showing that, the number of Data Packets does not grow exponentially with the increase of pedestrians count, (i.e., proof of Data suppression is working), use the following file:
+
+	/graphs/Data.R
+
+It will generate the following graph:
+
+	/graphs/pdfs/Data.pdf
