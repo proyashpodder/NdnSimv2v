@@ -106,24 +106,30 @@ or
 Available simulations
 =====================
 
-count_speed_adjustment.py: Finding numbers of adjusted, collided, passed Cars 
+dynamic_pedestrian.py: 
 -----------------------------------------------------------------------------
 
-To find the number of adjusted, collided, passed car with some other computed numbers (e.g, `adjusted_and_not_collided`).
+To find all the results associated with our experiments:
 
-    ./run.py collision-prevention -sg
+    ./run.py all-run -sg
 
 Outputs:
 
-- `1-1-collisions-baseline-risky-decelerations-run-1.csv`
-- `1-1-collisions-baseline-run-1.csv`
-- `1-2-collisions-risky-decelerations-run-1.csv`
-- `1-2-collisions-risky-decelerations-run-2.csv`
-- `1-2-collisions-risky-decelerations-run-3.csv`
-- `1-2-collisions-risky-decelerations-run-4.csv`
-- ...
-- `1-2-collisions-run-1.csv`
-- `1-2-collisions-run-2.csv`
-- `1-2-collisions-run-3.csv`
-- `1-2-collisions-run-4.csv`
-- ...
+-`nowTime-1-0.0001-0.5-4-hd-40-ped-12-poi-6-pro-100-consumerdistance.csv'`
+-`nowTime-2-0.0001-0.5-4-hd-40-ped-12-poi-6-pro-100-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-8-md-40-ped-12-poi-6-pro-100-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-12-ld-40-ped-12-poi-6-pro-100-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-80-ped-12-poi-6-pro-100-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-160-ped-12-poi-6-pro-100-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-320-ped-12-poi-6-pro-100-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-640-ped-12-poi-6-pro-100-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-40-ped-12-poi-6-pro-300-consumerdistance.csv'`
+-`nowTime-2-0.0001-0.5-4-hd-40-ped-12-poi-6-pro-300-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-8-md-40-ped-12-poi-6-pro-300-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-12-ld-40-ped-12-poi-6-pro-300-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-80-ped-12-poi-6-pro-300-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-160-ped-12-poi-6-pro-300-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-320-ped-12-poi-6-pro-300-consumerdistance.csv'`
+-`nowTime-1-0.0001-0.5-4-hd-640-ped-12-poi-6-pro-300-consumerdistance.csv'`
+
+
