@@ -240,13 +240,4 @@ g <- ggplot(data=bd, aes(x=factor(Count),
                          fill=Type)) +
  geom_bar(position="dodge", stat="identity", colour="black") +geom_errorbar(aes(ymin=Min, ymax=Max), size=I(0.3), width=I(0.4), position=position_dodge(width=1))+ theme_custom()+ ggtitle("Comparison among baseline, Low, Medium and High Density vehicle in single hop scenario for various pedestrain count") + xlab("Number of Pedestrians") + ylab("Number of Total Packets (Mean of 10 runs)")
 
-grob <- grobTree(textGrob("Low Density = 0-15 veh/mile/lane", x=0.1,  y=0.95, hjust=0,
-  gp=gpar(col="red", fontsize=13, fontface="italic")))
-grob1 <- grobTree(textGrob("Medium Density = 16-30 veh/mile/lane", x=0.1,  y=0.85, hjust=0,
-  gp=gpar(col="red", fontsize=13, fontface="italic")))
-grob2 <- grobTree(textGrob("High Density = 31-45 veh/mile/lane", x=0.1,  y=0.75, hjust=0,
-  gp=gpar(col="red", fontsize=13, fontface="italic")))
-
-g + annotation_custom(grob) + annotation_custom(grob1) + annotation_custom(grob2)
-
 ggsave("graphs/pdfs/ld-comparison-basline-multi-single-traffic", plot=g, width=9, height=5, device=cairo_pdf)

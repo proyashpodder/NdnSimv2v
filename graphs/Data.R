@@ -1,4 +1,18 @@
+#!/usr/bin/env Rscript
+
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(plyr))
+suppressPackageStartupMessages(library(tidyr))
+suppressPackageStartupMessages(library(reshape2))
+suppressPackageStartupMessages(library(ddply))
+
+# install.packages('doBy')
+suppressPackageStartupMessages(library(doBy))
+
+source("graphs/graph-style.R")
+source("graphs/helpers.R")
+
 data = c()
 pedCount = c(40,80,160,320,640)
 
@@ -32,5 +46,5 @@ g <- ggplot(data=dd, aes(x=factor(Count),
  geom_bar(position="dodge", stat="identity", colour="black") +
 geom_errorbar(aes(ymin=Min, ymax=Max, group=Count), size=I(0.3), width=I(0.4), position=position_dodge(width=1))+ theme_custom()+ ggtitle("Total Number of Data Packets for varioud pedestrian count") + xlab("Number of Pedestrians") + ylab("Number of Total Data Packets") + scale_y_continuous(limits = c(0, 1000))
 
-ggsave("graphs/pdfs/Data-packet-flatness.pdf", plot=g, width=9, height=5, device=cairo_pdf)
+ggsave("graphs/pdfs/Data.pdf", plot=g, width=9, height=5, device=cairo_pdf)
 
