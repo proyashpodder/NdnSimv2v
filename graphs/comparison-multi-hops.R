@@ -17,9 +17,9 @@ data = c()
 pedCount = c(40,80,160,320,640)
 Density = c("12-ld","8-md","4-hd")
 
-#data = c()
-#pedCount = c(320)
-#Density = c("4-hd")
+data = c()
+pedCount = c(80)
+Density = c("8-md")
 
 detach(package:plyr)
 
@@ -58,7 +58,7 @@ dist = function(pos) {
 
 for (den in Density){
     for (ped in pedCount){
-        for (r in 1:2){
+        for (r in 1:10){
             f = file(paste(sep='', 'results/nowTime-',r,'-0.0001-0.5-',den,'-',ped,'-ped-12-poi-6-pro-300-consumerdistance.csv'))
             d = read.table(f,header=TRUE)
             d = subset(d, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
