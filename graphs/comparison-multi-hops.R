@@ -17,31 +17,21 @@ data = c()
 pedCount = c(40,80,160,320,640)
 Density = c("12-ld","8-md","4-hd")
 
-data = c()
-pedCount = c(80)
-Density = c("8-md")
+#data = c()
+#pedCount = c(80)
+#Density = c("8-md")
 
 detach(package:plyr)
 
 Intersection=c(500,500,0)
 
-dist = function(pos) {
-    out = vector(mode="numeric",length=length(pos))
-    for (i in 1:length(pos)) {
-        point = as.numeric(unlist(strsplit(as.character(pos[i]), ",")))
-        out[i] = sqrt(sum((point - Intersection)^2))
-    }
-    return (out)
-}
 
 dist = function(pos) {
     out = vector(mode="numeric",length=length(pos))
     for (i in 1:length(pos)) {
         tryCatch({
-        print("before")
         point = as.numeric(unlist(strsplit(pos[i], ",")))
         out[i] = sqrt(sum((point - Intersection)^2))
-        print("after")
         }, warning = function(w) {
             print(w)
         }, error = function(e) {
@@ -58,7 +48,7 @@ dist = function(pos) {
 
 for (den in Density){
     for (ped in pedCount){
-        for (r in 1:2){
+        for (r in 1:10){
             f = file(paste(sep='', 'results/nowTime-',r,'-0.0001-0.5-',den,'-',ped,'-ped-12-poi-6-pro-300-consumerdistance.csv'))
             d = read.table(f,header=TRUE)
             d = subset(d, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
