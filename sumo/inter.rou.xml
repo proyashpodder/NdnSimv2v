@@ -15,16 +15,16 @@
   <person id="person_1" depart="0">
         <walk edges="2i 1o" speed="0.5"/>
    </person>--> 
-<personFlow id="p1" type="p0" begin="0" end="60" number="80" departPos="475">
+<personFlow id="p1" type="p0" begin="0" end="60" number="20" departPos="475">
        <walk from="1i" to="2o" speed="1.2"/>
   </personFlow>
-<personFlow id="p2" type="p0" begin="0" end="60" number="80" departPos="450">
+<personFlow id="p2" type="p0" begin="0" end="60" number="20" departPos="450">
        <walk from="2i" to="1o" speed="1.1"/>
   </personFlow>
-<personFlow id="p3" type="p0" begin="0" end="60" number="80" departPos="425">
+<personFlow id="p3" type="p0" begin="0" end="60" number="20" departPos="425">
        <walk from="3i" to="4o" speed="1.25"/>
   </personFlow>
-<personFlow id="p4" type="p0" begin="0" end="60" number="80" departPos="400">
+<personFlow id="p4" type="p0" begin="0" end="60" number="20" departPos="400">
        <walk from="4i" to="3o" speed="1.5"/>
   </personFlow>
 <!--<vehicle depart="0" id="v01" route="r01" departSpeed="15" type="CarC"/>
@@ -65,25 +65,25 @@
 <flow id="f8" type="CarB" from="4i" to="3o" begin="0" end="60" period="6" departSpeed="random" maxSpeed="18.0" accel="3.0"/>-->
 
 <!-- for med-density (approx 12 veh/km/lane or 21.5 veh/mile/lane -->
-<!--<flow id="f1" type="CarB" from="1i" to="4o" begin="0" end="60" period="8" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
+<flow id="f1" type="CarB" from="1i" to="4o" begin="0" end="60" period="8" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
 <flow id="f2" type="CarB" from="1i" to="2o" begin="0" end="60" period="4" departSpeed="random" maxSpeed="20.0" departLane="2" accel="3.0"/>
 <flow id="f3" type="CarB" from="2i" to="3o" begin="0" end="60" period="8" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
 <flow id="f4" type="CarB" from="2i" to="1o" begin="0" end="60" period="4" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
 <flow id="f5" type="CarB" from="3i" to="1o" begin="0" end="60" period="8" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
 <flow id="f6" type="CarB" from="3i" to="4o" begin="0" end="60" period="4" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
 <flow id="f7" type="CarB" from="4i" to="2o" begin="0" end="60" period="8" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
-<flow id="f8" type="CarB" from="4i" to="3o" begin="0" end="60" period="4" departSpeed="random" maxSpeed="18.0" accel="3.0"/>-->
+<flow id="f8" type="CarB" from="4i" to="3o" begin="0" end="60" period="4" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
 
 
 <!-- for high-density (approx 23.5 veh/km/lane or 40 veh/mile/lane -->
-<flow id="f1" type="CarB" from="1i" to="4o" begin="0" end="60" period="4" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
+<!--<flow id="f1" type="CarB" from="1i" to="4o" begin="0" end="60" period="4" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
 <flow id="f2" type="CarB" from="1i" to="2o" begin="0" end="60" period="2" departSpeed="random" maxSpeed="20.0" departLane="2" accel="3.0"/>
 <flow id="f3" type="CarB" from="2i" to="3o" begin="0" end="60" period="4" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
 <flow id="f4" type="CarB" from="2i" to="1o" begin="0" end="60" period="2" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
 <flow id="f5" type="CarB" from="3i" to="1o" begin="0" end="60" period="4" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
 <flow id="f6" type="CarB" from="3i" to="4o" begin="0" end="60" period="2" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
 <flow id="f7" type="CarB" from="4i" to="2o" begin="0" end="60" period="4" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
-<flow id="f8" type="CarB" from="4i" to="3o" begin="0" end="60" period="2" departSpeed="random" maxSpeed="18.0" accel="3.0"/>
+<flow id="f8" type="CarB" from="4i" to="3o" begin="0" end="60" period="2" departSpeed="random" maxSpeed="18.0" accel="3.0"/>-->
 
 
 <!--<flow id="f1" type="CarB" from="1i" to="4o" period="20" departSpeed="random" departLane="3" maxSpeed="20.0" accel="3.5"/>
