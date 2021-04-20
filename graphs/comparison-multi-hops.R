@@ -28,7 +28,7 @@ Intersection=c(500,500,0)
 dist = function(pos) {
     out = vector(mode="numeric",length=length(pos))
     for (i in 1:length(pos)) {
-        point = as.numeric(unlist(strsplit(pos[i], ",")))
+        point = as.numeric(unlist(strsplit(as.character(pos[i]), ",")))
         out[i] = sqrt(sum((point - Intersection)^2))
     }
     return (out)
@@ -58,7 +58,7 @@ dist = function(pos) {
 
 for (den in Density){
     for (ped in pedCount){
-        for (r in 1:10){
+        for (r in 1:2){
             f = file(paste(sep='', 'results/nowTime-',r,'-0.0001-0.5-',den,'-',ped,'-ped-12-poi-6-pro-300-consumerdistance.csv'))
             d = read.table(f,header=TRUE)
             d = subset(d, FaceDescr=="lte://" & (Type == "OutInterests" | Type == "OutData"))
