@@ -185,11 +185,12 @@ g <- ggplot(data=bd2, aes(x=Count,
     geom_bar(aes(linetype=Distance), position="dodge", stat="identity", colour="black", alpha=0.1) +
     geom_errorbar(data=ddd3, aes(ymin=Min, ymax=Max), size=I(0.3), width=I(0.2), position=position_dodge(width=0.9))+
     theme_custom()+
-    ggtitle("Comparison among baseline, Low, Medium and High Density vehicle in single hop scenario for various pedestrain count") + xlab("Number of Pedestrians") +
+    xlab("Number of Pedestrians") +
     ylab("Number of Total Packets (Mean of 10 runs)")
 
+    ## ggtitle("Comparison among baseline, Low, Medium and High Density vehicle in multi hop scenario for various pedestrain count") +
 
 ## +
     ## facet_wrap(~ PacketType)
 
-ggsave("graphs/multi-hops-comparison.pdf", plot=g, width=9, height=5, device=cairo_pdf)
+ggsave("graphs/multi-hops-comparison.pdf", plot=g, width=6, height=3.5, device=cairo_pdf)
