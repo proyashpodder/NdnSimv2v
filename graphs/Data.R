@@ -18,7 +18,7 @@ pedCount = c(40,80,160,320,640)
 
 for (ped in pedCount){
     for (r in 1:5){
-        f = file(paste(sep='', 'results/nowTime-',r,'-0.0001-0.5-hd4-',ped,'-ped-12-poi-6-pro-100-consumerdistance.csv'))
+        f = file(paste(sep='', 'results/nowTime-',r,'-0.0001-0.5-4-hd-',ped,'-ped-12-poi-6-pro-100-consumerdistance.csv'))
         d = read.table(f,header=TRUE)
         d = subset(d, FaceDescr=="lte://" & (Type == "OutData"))
         d[2:7] <- NULL

@@ -35,7 +35,7 @@ data_file = open('results/%s-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,fl
 
 #rates_file = 'results/%s-%s-rates-run-%d-w-m-s.csv' % (cmd.poi,cmd.output, cmd.run)
 #rates_file = 'results/modified-simulation-hd-80.csv'
-rates_file = 'results/nowTime-'+str(cmd.run)+'-'+str(cmd.tminD)+'-'+str(cmd.tmaxD)+'-8-md-80-ped-12-poi-6-pro-'+str(cmd.dis)+'-consumerdistance.csv'
+rates_file = '1-hop-result/nowTime-'+str(cmd.run)+'-'+str(cmd.tminD)+'-'+str(cmd.tmaxD)+'-8-md-640-ped-12-poi-6-pro-'+str(cmd.dis)+'-consumerdistance.csv'
 app_delays_file = 'results/%s-app-delays-run-%d-min-%f-max-%f.csv' % (cmd.output, cmd.run,float(cmd.minDecel),float(cmd.maxDecel))
 
 csv_writer = csv.writer(data_file)

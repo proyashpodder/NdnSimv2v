@@ -151,7 +151,7 @@ class AllRun(Processor):
         # other initialization, if any
 
     def simulate (self):
-        for distance in [300]:
+        for distance in [100]:
             for run in range(1,11):
                 cmdline = ["python3", "./scenarios/dynamic_pedestrian.py", "--duration=61", "--run={}".format(run), "--dis={}".format(distance)]
                 job = SimulationJob (cmdline)
